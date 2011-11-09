@@ -35,7 +35,7 @@ public class Main {
 		
 		EntailmentRecognizer rec4 = new BleuScore();
 		findBestThreshold(advPairs, rec4);
-		/*
+		
 		EntailmentRecognizer rec1 = new LexicalMatching();
 		findBestThreshold(advPairs, rec1);
 		
@@ -44,7 +44,7 @@ public class Main {
 		
 		EntailmentRecognizer rec3 = new LemmaAndPosMatching();
 		findBestThreshold(advPairs, rec3);
-		*/
+		
 		
 	}
 
