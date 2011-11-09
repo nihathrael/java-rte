@@ -30,5 +30,29 @@ public class Text {
 		
 		return result;
 	}
+	
+	public ArrayList<String> getWordArray() {
+		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<SentenceNode> allnodes = getAllSentenceNodes();
+		for(SentenceNode n : allnodes) {
+			if(n.word != null)
+				result.add(n.word);
+		}
+		return result;
+	}
 
+	public ArrayList<String> getWordArrayWithoutPunctuation() {
+		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<SentenceNode> allnodes = getAllSentenceNodes();
+		for(SentenceNode n : allnodes) {
+			if(n.word != null) {
+				if(n.word.equals(',') || n.word.equals('.'))
+					continue;
+			
+				result.add(n.word);
+			}
+		}
+		return result;
+	}
+	
 }

@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import rte.pairs.AdvPair;
+import rte.recognizers.BleuScore;
 import rte.recognizers.EntailmentRecognizer;
 import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
@@ -31,8 +32,11 @@ public class Main {
 		Collections.sort(advPairs);
 		System.out.println("Done!");
 		
-		EntailmentRecognizer rec1 = new LexicalMatching();
 		
+		EntailmentRecognizer rec4 = new BleuScore();
+		findBestThreshold(advPairs, rec4);
+		/*
+		EntailmentRecognizer rec1 = new LexicalMatching();
 		findBestThreshold(advPairs, rec1);
 		
 		EntailmentRecognizer rec2 = new LemmaMatching();
@@ -40,6 +44,7 @@ public class Main {
 		
 		EntailmentRecognizer rec3 = new LemmaAndPosMatching();
 		findBestThreshold(advPairs, rec3);
+		*/
 		
 	}
 
