@@ -92,6 +92,7 @@ public class Main {
 			}
 			in.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return results;
 
