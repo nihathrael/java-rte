@@ -36,7 +36,7 @@ public class Text {
 		ArrayList<SentenceNode> allnodes = getAllSentenceNodes();
 		for(SentenceNode n : allnodes) {
 			if(n.word != null)
-				result.add(n.word);
+				result.add(n.word.toLowerCase());
 		}
 		return result;
 	}
@@ -49,7 +49,7 @@ public class Text {
 				if(n.word.equals(',') || n.word.equals('.'))
 					continue;
 			
-				result.add(n.word);
+				result.add(n.word.toLowerCase());
 			}
 		}
 		return result;
