@@ -197,14 +197,13 @@ public class Main {
 	public static String getTagValue(String sTag, Element eElement) {
 		Node tmp = eElement.getElementsByTagName(sTag).item(0);
 		if(tmp == null) {
-			System.out.println(sTag + " is null!");
 			return null;
 		}
 		NodeList nlList = tmp.getChildNodes();
 
 		Node nValue = (Node) nlList.item(0);
 
-		return nValue.getNodeValue();
+		return nValue.getNodeValue().trim();
 	}
 
 	public static void main(String[] args) {

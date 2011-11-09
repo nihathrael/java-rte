@@ -10,4 +10,5 @@ public class Relation {
 		this.child = child;
 		this.type = type;
 	}
+	
 }
