@@ -20,5 +20,15 @@ public class Text {
 		
 		return text;
 	}
+	
+	public ArrayList<SentenceNode> getAllSentenceNodes() {
+		ArrayList<SentenceNode> result = new ArrayList<SentenceNode>();
+		
+		for(Sentence sentence : sentences) {
+			result.addAll(sentence.getAllSentenceNodes());
+		}
+		
+		return result;
+	}
 
 }
