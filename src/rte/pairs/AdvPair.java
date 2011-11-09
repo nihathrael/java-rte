@@ -2,14 +2,14 @@ package rte.pairs;
 
 import org.w3c.dom.Element;
 
-public class AdvPair {
+public class AdvPair implements Comparable<AdvPair> {
 
 	public int id;
 	public String task;
 	public boolean entailment;
 
-	Text text;
-	Text hypothesis;
+	public Text text;
+	public Text hypothesis;
 
 	public static AdvPair fromXML(Element pairElement) {
 		AdvPair pair = new AdvPair();
@@ -25,6 +25,11 @@ public class AdvPair {
 		
 
 		return pair;
+	}
+	
+	@Override
+	public int compareTo(AdvPair o) {
+		return new Integer(id).compareTo(o.id);
 	}
 
 }

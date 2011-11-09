@@ -10,6 +10,7 @@ public class Text {
 	ArrayList<Sentence> sentences = new ArrayList<Sentence>();
 	
 	public static Text fromXML(Element textElement) {
+		
 		Text text = new Text();
 		NodeList sentenceList = textElement.getElementsByTagName("sentence");
 		

@@ -1,5 +1,6 @@
 package rte;
 import java.io.BufferedReader;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -16,6 +17,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import rte.recognizers.*;
 import rte.pairs.AdvPair;
 import rte.pairs.Pair;
 
@@ -26,22 +28,24 @@ public class Main {
 		
 		
 		System.out.println("Reading Pairs...");
-		ArrayList<Pair> pairs = readPairs();
-		Collections.sort(pairs);
+		Collections.sort(advPairs);
 		System.out.println("Done!");
-
-		findBestThreshold(pairs);
+		
+		
+		EntailmentRecognizer rec1 = new LexicalMatching();
+		
+		findBestThreshold(advPairs, rec1);
 	}
 
 
 
 
-	private void findBestThreshold(ArrayList<Pair> pairs) {
+	private void findBestThreshold(ArrayList<AdvPair> pairs, EntailmentRecognizer recognizer) {
 		System.out.println("Searching for best threshold...");
 		double bestScore = 0.0;
 		double bestThres = 0.05;
 		for (double i = 0.05; i < 1.0; i += 0.025) {
-			ArrayList<Score> scores = analyzePairs(pairs, i);
+			ArrayList<Score> scores = analyzePairs(pairs, recognizer, i);
 			String file = writeScores(scores, "data/results.txt");
 			double score = getEvaluation(file);
 			if(score > bestScore) {
@@ -98,24 +102,14 @@ public class Main {
 
 	}
 
-	private ArrayList<Score> analyzePairs(ArrayList<Pair> pairs,
-			double threshold) {
+	private ArrayList<Score> analyzePairs(ArrayList<AdvPair> pairs, 
+			EntailmentRecognizer recognizer, double threshold) {
+		
 		ArrayList<Score> scores = new ArrayList<Score>();
-		for (Pair pair : pairs) {
-			String[] words = pair.h.split(" ");
-			int matches = 0;
-			for (String word : words) {
-				if (pair.t.contains(word)) {
-					matches++;
-				}
-			}
-			double wordNum = words.length;
-			boolean entailment;
-			if (matches / wordNum > threshold) {
-				entailment = true;
-			} else {
-				entailment = false;
-			}
+		for (AdvPair pair : pairs) {
+			
+			boolean entailment = recognizer.entails(pair.text, pair.hypothesis, threshold);
+			
 			Score tmpScore = new Score(pair.id, entailment);
 			scores.add(tmpScore);
 		}
