@@ -18,20 +18,29 @@ import org.w3c.dom.NodeList;
 
 import rte.pairs.AdvPair;
 import rte.recognizers.EntailmentRecognizer;
+import rte.recognizers.LemmaAndPosMatching;
+import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
 
 public class Main {
 
 	public Main() {
-		ArrayList<AdvPair> advPairs = readAdvancedPairs();
 		
 		System.out.println("Reading Pairs...");
+		ArrayList<AdvPair> advPairs = readAdvancedPairs();
 		Collections.sort(advPairs);
 		System.out.println("Done!");
 		
 		EntailmentRecognizer rec1 = new LexicalMatching();
 		
 		findBestThreshold(advPairs, rec1);
+		
+		EntailmentRecognizer rec2 = new LemmaMatching();
+		findBestThreshold(advPairs, rec2);
+		
+		EntailmentRecognizer rec3 = new LemmaAndPosMatching();
+		findBestThreshold(advPairs, rec3);
+		
 	}
 
 
