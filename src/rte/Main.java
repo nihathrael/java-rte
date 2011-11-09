@@ -29,7 +29,6 @@ public class Main {
 		Collections.sort(advPairs);
 		System.out.println("Done!");
 		
-		
 		EntailmentRecognizer rec1 = new LexicalMatching();
 		
 		findBestThreshold(advPairs, rec1);

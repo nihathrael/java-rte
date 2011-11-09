@@ -5,12 +5,12 @@ import org.w3c.dom.Element;
 import rte.Main;
 
 public class SentenceNode {
-	final String id;
-	String word = null;
-	String lemma = null;
-	String posTag = null;
-	Relation relation = null;
-	SentenceNode antecedent = null;
+	public final String id;
+	public String word = null;
+	public String lemma = null;
+	public String posTag = null;
+	public Relation relation = null;
+	public SentenceNode antecedent = null;
 	
 	public SentenceNode(String id) {
 		this.id = id;
