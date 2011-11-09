@@ -1,6 +1,5 @@
 package rte;
 import java.io.BufferedReader;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,15 +16,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import rte.recognizers.*;
 import rte.pairs.AdvPair;
-import rte.pairs.Pair;
+import rte.recognizers.EntailmentRecognizer;
+import rte.recognizers.LexicalMatching;
 
 public class Main {
 
 	public Main() {
 		ArrayList<AdvPair> advPairs = readAdvancedPairs();
-		
 		
 		System.out.println("Reading Pairs...");
 		Collections.sort(advPairs);
@@ -41,7 +39,7 @@ public class Main {
 
 
 	private void findBestThreshold(ArrayList<AdvPair> pairs, EntailmentRecognizer recognizer) {
-		System.out.println("Searching for best threshold...");
+		System.out.println("Searching for best threshold using " + recognizer.getName() + "...");
 		double bestScore = 0.0;
 		double bestThres = 0.05;
 		for (double i = 0.05; i < 1.0; i += 0.025) {
@@ -72,7 +70,6 @@ public class Main {
 
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return outputFile;
@@ -115,49 +112,6 @@ public class Main {
 		}
 		return scores;
 	}
-
-	private ArrayList<Pair> readPairs() {
-		ArrayList<Pair> pairs = new ArrayList<Pair>();
-
-		try {
-
-			File fXmlFile = new File("data/RTE2_dev.xml");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
-			doc.getDocumentElement().normalize();
-
-			NodeList nList = doc.getElementsByTagName("pair");
-
-			for (int i = 0; i < nList.getLength(); i++) {
-
-				Node nNode = nList.item(i);
-
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
-					String t = getTagValue("t", eElement);
-					String h = getTagValue("h", eElement);
-
-					int id = Integer.parseInt(eElement.getAttribute("id"));
-					String task = eElement.getAttribute("task");
-					boolean entailment;
-					if (eElement.getAttribute("entailment").equals("yes")) {
-						entailment = true;
-					} else {
-						entailment = false;
-					}
-
-					Pair pair = new Pair(id, task, entailment, t, h);
-					pairs.add(pair);
-
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return pairs;
-	}
 	
 	private ArrayList<AdvPair> readAdvancedPairs() {
 		ArrayList<AdvPair> pairs = new ArrayList<AdvPair>();
@@ -195,14 +149,13 @@ public class Main {
 			return null;
 		}
 		NodeList nlList = tmp.getChildNodes();
-
 		Node nValue = (Node) nlList.item(0);
-
+		
 		return nValue.getNodeValue().trim();
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Hi!");
-		Main main = new Main();
+		System.out.println("Java RTE - Welcome!");
+		new Main();
 	}
 }

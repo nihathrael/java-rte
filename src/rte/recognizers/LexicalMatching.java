@@ -24,5 +24,9 @@ public class LexicalMatching implements EntailmentRecognizer {
 		return false;
 		
 	}
+	
+	public String getName() {
+		return LexicalMatching.class.getSimpleName();
+	}
 
 }
