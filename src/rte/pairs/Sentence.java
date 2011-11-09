@@ -41,6 +41,7 @@ public class Sentence {
 				
 				Relation rel = new Relation(mainNode, parent, type);
 				mainNode.relation = rel;
+				parent.children.add(mainNode);
 				//System.out.println("Relation created!");
 			}
 			String antecedentId = Main.getTagValue("antecedent", node);
