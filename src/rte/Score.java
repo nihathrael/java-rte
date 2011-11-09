@@ -1,3 +1,4 @@
+package rte;
 
 public class Score {
 	

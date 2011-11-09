@@ -1,4 +1,4 @@
-import java.util.Comparator;
+package rte.pairs;
 
 
 public class Pair implements Comparable<Pair> {

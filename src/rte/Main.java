@@ -1,10 +1,9 @@
-import java.io.BufferedInputStream;
+package rte;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,27 +16,49 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import rte.pairs.AdvPair;
+import rte.pairs.Pair;
+
 public class Main {
 
 	public Main() {
+		ArrayList<AdvPair> advPairs = readAdvancedPairs();
+		
+		
 		System.out.println("Reading Pairs...");
 		ArrayList<Pair> pairs = readPairs();
 		Collections.sort(pairs);
 		System.out.println("Done!");
 
-		for (double i = 0.05; i < 1.0; i += 0.025) {
-			System.out.println("Analyzing for threshold: " + i);
-			ArrayList<Score> scores = analyzePairs(pairs, i);
-			writeScores(scores);
-			getEvaluation();
-			System.out.println("Done!");
-		}
+		findBestThreshold(pairs);
 	}
 
-	private void writeScores(ArrayList<Score> scores) {
+
+
+
+	private void findBestThreshold(ArrayList<Pair> pairs) {
+		System.out.println("Searching for best threshold...");
+		double bestScore = 0.0;
+		double bestThres = 0.05;
+		for (double i = 0.05; i < 1.0; i += 0.025) {
+			ArrayList<Score> scores = analyzePairs(pairs, i);
+			String file = writeScores(scores, "data/results.txt");
+			double score = getEvaluation(file);
+			if(score > bestScore) {
+				bestScore = score;
+				bestThres = i;
+			}
+		}
+		System.out.println("Done! Found best results for " + bestThres + " with score: " + bestScore);
+	}
+	
+	
+	
+
+	private String writeScores(ArrayList<Score> scores, String outputFile) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(
-					"data/results.txt"));
+					outputFile));
 			writer.write("ranked: no");
 			writer.newLine();
 			for (Score score : scores) {
@@ -50,13 +71,15 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return outputFile;
 	}
 
-	private void getEvaluation() {
+	private double getEvaluation(String resultsFile) {
+		double results = -1.0;
 		try {
 			// Execute command
 			String[] commands = new String[] { "python2", "data/eval_rte.py",
-					"data/RTE2_dev.xml", "data/results.txt" };
+					"data/RTE2_dev.xml", resultsFile };
 			Process child = Runtime.getRuntime().exec(commands);
 
 			// Get the input stream and read from it
@@ -64,11 +87,14 @@ public class Main {
 					child.getInputStream()));
 			String c;
 			while ((c = in.readLine()) != null) {
-				System.out.println(c);
+				String[] parts = c.split(" = ");
+				results = Double.parseDouble(parts[1]);
 			}
 			in.close();
 		} catch (IOException e) {
 		}
+		return results;
+
 	}
 
 	private ArrayList<Score> analyzePairs(ArrayList<Pair> pairs,
@@ -137,10 +163,44 @@ public class Main {
 		}
 		return pairs;
 	}
+	
+	private ArrayList<AdvPair> readAdvancedPairs() {
+		ArrayList<AdvPair> pairs = new ArrayList<AdvPair>();
 
-	private static String getTagValue(String sTag, Element eElement) {
-		NodeList nlList = eElement.getElementsByTagName(sTag).item(0)
-				.getChildNodes();
+		try {
+
+			File fXmlFile = new File("data/RTE2_dev.preprocessed.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			doc.getDocumentElement().normalize();
+
+			NodeList nList = doc.getElementsByTagName("pair");
+
+			for (int i = 0; i < nList.getLength(); i++) {
+
+				Node nNode = nList.item(i);
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					AdvPair pair = AdvPair.fromXML(eElement);
+					pairs.add(pair);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pairs;
+	}
+
+	public static String getTagValue(String sTag, Element eElement) {
+		Node tmp = eElement.getElementsByTagName(sTag).item(0);
+		if(tmp == null) {
+			System.out.println(sTag + " is null!");
+			return null;
+		}
+		NodeList nlList = tmp.getChildNodes();
 
 		Node nValue = (Node) nlList.item(0);
 
