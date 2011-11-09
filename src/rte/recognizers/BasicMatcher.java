@@ -18,7 +18,7 @@ public abstract class BasicMatcher implements EntailmentRecognizer {
 			for (SentenceNode textNode : textNodes) {
 				if (match(hypoNode, textNode)) {
 					matches++;
-					continue;
+					break;
 				}
 			}
 		}

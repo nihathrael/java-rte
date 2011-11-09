@@ -18,28 +18,46 @@ import org.w3c.dom.NodeList;
 
 import rte.pairs.AdvPair;
 import rte.recognizers.EntailmentRecognizer;
+import rte.recognizers.IDFLemmaMatching;
+import rte.recognizers.IDFLexicalMatching;
 import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
+import rte.util.LemmaIDFCalculator;
+import rte.util.WordIDFCalculator;
 
 public class Main {
+	
+	WordIDFCalculator wordIdfs = null;
+	LemmaIDFCalculator lemmaIdfs = null;
 
 	public Main() {
 		
 		System.out.println("Reading Pairs...");
-		ArrayList<AdvPair> advPairs = readAdvancedPairs();
-		Collections.sort(advPairs);
+		ArrayList<AdvPair> pairs = readAdvancedPairs();
+		Collections.sort(pairs);
+		System.out.println("Done!");
+		
+		System.out.println("Calculating IDFs...");
+		wordIdfs = new WordIDFCalculator(pairs);
+		lemmaIdfs = new LemmaIDFCalculator(pairs);
 		System.out.println("Done!");
 		
 		EntailmentRecognizer rec1 = new LexicalMatching();
 		
-		findBestThreshold(advPairs, rec1);
+		findBestThreshold(pairs, rec1);
 		
 		EntailmentRecognizer rec2 = new LemmaMatching();
-		findBestThreshold(advPairs, rec2);
+		findBestThreshold(pairs, rec2);
 		
 		EntailmentRecognizer rec3 = new LemmaAndPosMatching();
-		findBestThreshold(advPairs, rec3);
+		findBestThreshold(pairs, rec3);
+		
+		EntailmentRecognizer rec4 = new IDFLexicalMatching(wordIdfs);
+		findBestThreshold(pairs, rec4);
+		
+		EntailmentRecognizer rec5 = new IDFLemmaMatching(lemmaIdfs);
+		findBestThreshold(pairs, rec5);
 		
 	}
 
