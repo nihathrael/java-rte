@@ -1,28 +1,29 @@
 package rte.recognizers;
 
+import java.util.ArrayList;
+
+import rte.pairs.SentenceNode;
 import rte.pairs.Text;
 
 public class LexicalMatching implements EntailmentRecognizer {
 	
 	public boolean entails(Text text, Text hypothesis, double threshold) {
-		/*
-		String[] words = pair.h.split(" ");
-		int matches = 0;
-		for (String word : words) {
-			if (pair.t.contains(word)) {
-				matches++;
-			}
-		}
-		double wordNum = words.length;
-		boolean entailment;
-		if (matches / wordNum > threshold) {
-			entailment = true;
-		} else {
-			entailment = false;
-		}
-		*/
-		return false;
 		
+		ArrayList<SentenceNode> textNodes = text.getAllSentenceNodes();
+		ArrayList<SentenceNode> hypoNodes = hypothesis.getAllSentenceNodes();
+		
+		int matches = 0;
+		for (SentenceNode word : hypoNodes) {
+			if(word.word == null) continue;
+			for(SentenceNode textpart : textNodes) {
+				if(textpart.word == null) continue;
+				if(word.word.equals(textpart.word)) {
+					matches++;
+					break;
+				}
+			}	
+		}
+		return (double)matches / (double)hypoNodes.size() > threshold;
 	}
 	
 	public String getName() {
