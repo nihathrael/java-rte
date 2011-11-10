@@ -67,8 +67,15 @@ public class Main {
 		EntailmentRecognizer rec5 = new IDFLemmaMatching(lemmaIdfs);
 		findBestThreshold(pairs, rec5);
 		
-		EntailmentRecognizer rec6 = new BleuScore();
-		findBestThreshold(pairs, rec6);
+		
+		for(int i=2; i<5; i++) {
+			EntailmentRecognizer rec6 = new BleuScore(i, true);
+			findBestThreshold(pairs, rec6);
+		}
+		for(int i=2; i<5; i++) {
+			EntailmentRecognizer rec6 = new BleuScore(i, false);
+			findBestThreshold(pairs, rec6);
+		}
 		
 		
 		
