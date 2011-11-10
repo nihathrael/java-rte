@@ -6,9 +6,11 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import rte.pairs.AdvPair;
 import rte.pairs.Relation;
 import rte.pairs.Sentence;
 import rte.pairs.SentenceNode;
+import rte.pairs.Text;
 
 public class TreeDistCalculatorTest {
 
@@ -79,13 +81,29 @@ public class TreeDistCalculatorTest {
 		toName.addAll(t1.getAllSentenceNodes());
 		toName.addAll(t2.getAllSentenceNodes());
 		
+		Text text = new Text();
+		text.sentences.add(t1);
+		
+		
 		for(SentenceNode n : toName) {
 			n.word = n.id;
 			n.lemma = n.id;
 		}
 		
-		TreeDistCalculator calculator = new TreeDistCalculator(f, f2);
-		assertEquals(2, calculator.calculate());
+		Text hypothesis = new Text();
+		hypothesis.sentences.add(t2);
+		
+		AdvPair pair = new AdvPair();
+		pair.text = text;
+		pair.hypothesis = hypothesis;
+		
+		ArrayList<AdvPair> pairs = new ArrayList<AdvPair>();
+		pairs.add(pair);
+		
+		WordIDFCalculator idfs = new WordIDFCalculator(pairs);
+		
+		TreeDistCalculator calculator = new TreeDistCalculator(f, f2, idfs);
+		assertEquals(2.0, calculator.calculate(), 0.01);
 		
 	}
 

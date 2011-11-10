@@ -18,11 +18,16 @@ public class TreeDistCalculator {
 	ArrayList<Integer> krs1;
 	ArrayList<Integer> krs2;
 
-	int[][] tree_dist;
+	double[][] tree_dist;
+	
+	IDFCalculator idfs;
 	
 	private static Forest NULLFOREST = new Forest(-1, -1);
 
-	public TreeDistCalculator(SentenceNode o1, SentenceNode o2) {
+	public TreeDistCalculator(SentenceNode o1, SentenceNode o2, IDFCalculator idfs) {
+		
+		this.idfs = idfs;
+		
 		T1 = o1.postOrder();
 		T2 = o2.postOrder();
 
@@ -32,10 +37,10 @@ public class TreeDistCalculator {
 		krs1 = o1.keyRoots(l1, T1);
 		krs2 = o2.keyRoots(l2, T2);
 
-		tree_dist = new int[T1.size()][T2.size()];
+		tree_dist = new double[T1.size()][T2.size()];
 	}
 
-	public int calculate() {
+	public double calculate() {
 		for (Integer i : krs1) {
 			for (Integer j : krs2) {
 				calcDist(i, j);
@@ -60,7 +65,7 @@ public class TreeDistCalculator {
 		for (int i1 = l1[i]; i1 <= i; i1++) {
 			for (int j1 = l2[j]; j1 <= j; j1++) {
 				if(l1[i1] == l1[i] && l2[j1] == l2[j]) {
-					int min = min(
+					double min = min(
 						fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1)))   + gamma(i1,	null),
 						fdist.get(ft(forest(l1[i],i1),   forest(l2[j],j1-1))) + gamma(null,	j1),
 						fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1-1))) + gamma(i1,	j1)
@@ -68,7 +73,7 @@ public class TreeDistCalculator {
 					fdist.p(ft(forest(l1[i],i1), forest(l2[j],j1)), min);
 					tree_dist[i1][j1] = min; // Store in permanent array 
 				} else {
-					int min = min(
+					double min = min(
 							fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1)))   + gamma(i1,	null),
 							fdist.get(ft(forest(l1[i],i1),   forest(l2[j],j1-1))) + gamma(null,	j1),
 							fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1-1))) + tree_dist[i1][j1]
@@ -82,8 +87,8 @@ public class TreeDistCalculator {
 
 	}
 
-	public int min(int a, int b, int c) {
-		int min = a;
+	public double min(double a, double b, double c) {
+		double min = a;
 		if(b<min)
 			min = b;
 		if(c<min)
@@ -100,18 +105,24 @@ public class TreeDistCalculator {
 	}
 
 
-	private int gamma(Integer n, Integer m) {
-		if (n == null) {
-			return 1;
-		}
+	private double gamma(Integer n, Integer m) {
 		
 		if(m == null) {
 			return 0;
 		}
 		
+		SentenceNode t2Node = T2.get(m);
+		if (n == null) {
+			if(t2Node.word == null) {
+				return 1.0;
+			}
+			return idfs.getValueFor(t2Node.word);
+		}
+		
+		
+		
 		
 		SentenceNode t1Node = T1.get(n);
-		SentenceNode t2Node = T2.get(m);
 		
 		if(t1Node.word == null || t2Node.word == null) {
 			return 1;
