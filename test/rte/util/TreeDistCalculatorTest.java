@@ -88,5 +88,6 @@ public class TreeDistCalculatorTest {
 		assertEquals(2, calculator.calculate());
 		
 	}
+	
 
 }
