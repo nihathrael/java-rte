@@ -107,29 +107,37 @@ public class TreeDistCalculator {
 
 	private double gamma(Integer n, Integer m) {
 		
+		String valN, valM;
+		
+		
+		if(n==null && m==null) return 0;
+		
 		if(m == null) {
 			return 0;
 		}
 		
-		SentenceNode t2Node = T2.get(m);
+		valM = T2.get(m).word;
+		
 		if (n == null) {
-			if(t2Node.word == null) {
+			return 1.0;
+			/*
+			if(valM == null) {
 				return 1.0;
 			}
-			return idfs.getValueFor(t2Node.word);
+			
+			return idfs.getValueFor(valM);
+			*/
 		}
 		
+		valN = T1.get(n).word;	
 		
 		
-		
-		SentenceNode t1Node = T1.get(n);
-		
-		if(t1Node.word == null || t2Node.word == null) {
-			return 1;
+		if(valN == null || valM == null) {
+			return 1.0;
 		}
 		
 	
-		if (t1Node.word.equals(t2Node.word)) {
+		if (valN.equals(valM)) {
 			return 0;
 		} else {
 			return 1;

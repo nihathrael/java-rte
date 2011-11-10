@@ -17,6 +17,8 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 
 	public boolean entails(Text text, Text hypothesis, double threshold) {
 
+		Sentence bestmatchSentenceH=null, bestmatchSentenceT=null;
+		
 		double minDistance = Double.MAX_VALUE;
 		for(Sentence sentence: hypothesis.sentences) {
 			SentenceNode node = sentence.getRootNode();
@@ -28,6 +30,8 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 				double dist = calculator.calculate();
 				if(dist< minDistance) {
 					minDistance = dist/hsize;
+					bestmatchSentenceH = sentence;
+					bestmatchSentenceT = sentence2;
 				}
 			}
 		}
@@ -39,9 +43,10 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 		System.out.println();
 		*/
 		
-		double value = 1.0 / (1.0+minDistance);
+		//double value = 1.0 / (1.0+minDistance);
 		//System.out.println(value);
-		return value > threshold;
+		minDistance = Math.pow(minDistance, 2.0);
+		return minDistance < threshold;
 	}
 
 	@Override
