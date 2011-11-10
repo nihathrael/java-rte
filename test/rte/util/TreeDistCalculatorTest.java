@@ -2,6 +2,8 @@ package rte.util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import rte.pairs.Relation;
@@ -65,12 +67,22 @@ public class TreeDistCalculatorTest {
 		a2.relation = new Relation(a2, d2, null);
 		b2.relation = new Relation(b2, d2, null);
 
-		t1.nodes.add(f2);
-		t1.nodes.add(e2);
-		t1.nodes.add(d2);
-		t1.nodes.add(c2);
-		t1.nodes.add(b2);
-		t1.nodes.add(a2);
+		t2.nodes.add(f2);
+		t2.nodes.add(e2);
+		t2.nodes.add(d2);
+		t2.nodes.add(c2);
+		t2.nodes.add(b2);
+		t2.nodes.add(a2);
+		
+		
+		ArrayList<SentenceNode> toName = new ArrayList<SentenceNode>();
+		toName.addAll(t1.getAllSentenceNodes());
+		toName.addAll(t2.getAllSentenceNodes());
+		
+		for(SentenceNode n : toName) {
+			n.word = n.id;
+			n.lemma = n.id;
+		}
 		
 		TreeDistCalculator calculator = new TreeDistCalculator(f, f2);
 		assertEquals(2, calculator.calculate());
