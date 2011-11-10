@@ -6,8 +6,15 @@ import rte.pairs.Text;
 
 public class BleuScore implements EntailmentRecognizer {
 
+	private int maxN;
+	private boolean mean;
+	
+	public BleuScore(int maxN_gramLength, boolean useArithmeticMean) {
+		maxN = maxN_gramLength;
+		mean = useArithmeticMean;
+	}
+	
 	public boolean entails(Text text, Text hypothesis, double threshold) {
-		int maxN=2;
 		ArrayList<ArrayList<String>> textGrams, hypoGrams;
 		textGrams = calcSetOfN_grams(text.getWordArrayWithoutPunctuation(), 1, maxN);
 		hypoGrams = calcSetOfN_grams(hypothesis.getWordArrayWithoutPunctuation(), 1, maxN);
@@ -17,11 +24,11 @@ public class BleuScore implements EntailmentRecognizer {
 			int matches = calcGramMatches(hypoGrams.get(i), textGrams.get(i));
 			double score = (double)matches / (double)hypoGrams.get(i).size();
 			//System.out.println(i+1 + "-gram Precision: " + matches + " / " + hypoGrams.get(i).size());
-			//ALTERNATIVE[Arithmetic Mean]: bleuScore += Math.log(score);
-			bleuScore += score/2;
+			if(mean) bleuScore += Math.log(score);
+			else bleuScore += score/2;
 		}
 		
-		//ALTERNATIVE[Arithmetic Mean]: bleuScore = Math.exp(bleuScore) / maxN;
+		if(mean) bleuScore = Math.exp(bleuScore) / maxN;
 		//System.out.println("BleuScore: " + bleuScore);
 		return bleuScore > threshold;
 	}
@@ -70,7 +77,8 @@ public class BleuScore implements EntailmentRecognizer {
 	}
 	
 	public String getName() {
-		return BleuScore.class.getSimpleName();
-	}
+		if(mean) return BleuScore.class.getSimpleName() + " with arithmetic mean, depth=" + maxN;
+		else return BleuScore.class.getSimpleName() + "without weighting, depth=" + maxN;
+	}	
 
 }
