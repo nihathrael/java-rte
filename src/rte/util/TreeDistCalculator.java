@@ -50,27 +50,27 @@ public class TreeDistCalculator {
 		ForestDist fdist = new ForestDist();
 
 		for (int i1 = l1[i]; i1 <= i; i1++) {
-			fdist.p(ft(forest(l1[i],i1), NULLFOREST), fdist.get(ft(forest(l1[i],i1-1), NULLFOREST)) + λ(i1,null));
+			fdist.p(ft(forest(l1[i],i1), NULLFOREST), fdist.get(ft(forest(l1[i],i1-1), NULLFOREST)) + gamma(i1,null));
 		}
 		
 		for (int j1 = l2[j]; j1 <= j; j1++) {
-			fdist.p(ft(NULLFOREST, forest(l2[j],j1)), fdist.get(ft(NULLFOREST, forest(l2[j],j1-1))) + λ(null,j1));
+			fdist.p(ft(NULLFOREST, forest(l2[j],j1)), fdist.get(ft(NULLFOREST, forest(l2[j],j1-1))) + gamma(null,j1));
 		}
 		
 		for (int i1 = l1[i]; i1 <= i; i1++) {
 			for (int j1 = l2[j]; j1 <= j; j1++) {
 				if(l1[i1] == l1[i] && l2[j1] == l2[j]) {
 					int min = min(
-						fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1)))   + λ(i1,	null),
-						fdist.get(ft(forest(l1[i],i1),   forest(l2[j],j1-1))) + λ(null,	j1),
-						fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1-1))) + λ(i1,	j1)
+						fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1)))   + gamma(i1,	null),
+						fdist.get(ft(forest(l1[i],i1),   forest(l2[j],j1-1))) + gamma(null,	j1),
+						fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1-1))) + gamma(i1,	j1)
 					);
 					fdist.p(ft(forest(l1[i],i1), forest(l2[j],j1)), min);
 					tree_dist[i1][j1] = min; // Store in permanent array 
 				} else {
 					int min = min(
-							fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1)))   + λ(i1,	null),
-							fdist.get(ft(forest(l1[i],i1),   forest(l2[j],j1-1))) + λ(null,	j1),
+							fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1)))   + gamma(i1,	null),
+							fdist.get(ft(forest(l1[i],i1),   forest(l2[j],j1-1))) + gamma(null,	j1),
 							fdist.get(ft(forest(l1[i],i1-1), forest(l2[j],j1-1))) + tree_dist[i1][j1]
 						);
 					fdist.p(ft(forest(l1[i],i1), forest(l2[j],j1)), min);
@@ -100,7 +100,7 @@ public class TreeDistCalculator {
 	}
 
 
-	private int λ(Integer n, Integer m) {
+	private int gamma(Integer n, Integer m) {
 		if (n == null || m == null) {
 			return 1;
 		}
