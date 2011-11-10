@@ -15,11 +15,15 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 		int minDistance = Integer.MAX_VALUE;
 		for(Sentence sentence: hypothesis.sentences) {
 			SentenceNode node = sentence.getRootNode();
+			int hsize = sentence.getAllSentenceNodes().size();
 			for(Sentence sentence2: text.sentences) {
 				SentenceNode node2 = sentence2.getRootNode();
 				//System.out.println("Comparing: " + node + node2);
 				TreeDistCalculator calculator = new TreeDistCalculator(node2, node);
 				int dist = calculator.calculate();
+				if(dist == 0) {
+					System.err.println(dist);
+				}
 				if(dist< minDistance) {
 					minDistance = dist;
 					bestmatchSentenceT = sentence2;

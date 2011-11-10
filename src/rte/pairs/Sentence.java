@@ -10,7 +10,7 @@ import rte.Main;
 public class Sentence {
 
 	final int serial;
-	ArrayList<SentenceNode> nodes = new ArrayList<SentenceNode>();
+	public final ArrayList<SentenceNode> nodes = new ArrayList<SentenceNode>();
 
 	public Sentence(int serial) {
 		this.serial = serial;

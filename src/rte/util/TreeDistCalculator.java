@@ -101,7 +101,6 @@ public class TreeDistCalculator {
 
 
 	private int gamma(Integer n, Integer m) {
-		
 		if (n == null) {
 			return 1;
 		}
