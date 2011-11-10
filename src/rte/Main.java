@@ -48,7 +48,7 @@ public class Main {
 		System.out.println("Done!");
 		
 
-		EntailmentRecognizer rec7 = new TreeDistMatcher();
+		EntailmentRecognizer rec7 = new TreeDistMatcher(wordIdfs);
 		findBestThreshold(pairs, rec7);
 
 		

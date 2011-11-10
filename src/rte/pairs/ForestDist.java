@@ -4,17 +4,17 @@ import java.util.HashMap;
 
 public class ForestDist {
 
-	HashMap<ForestTuple, Integer> distances = new HashMap<ForestTuple, Integer>();
+	HashMap<ForestTuple, Double> distances = new HashMap<ForestTuple, Double>();
 	
 	public ForestDist() {
-		distances.put(new ForestTuple(new Forest(-1, -1), new Forest(-1, -1)), 0);
+		distances.put(new ForestTuple(new Forest(-1, -1), new Forest(-1, -1)), 0.0);
 	}
 	
-	public void p(ForestTuple i, Integer b) {
+	public void p(ForestTuple i, Double b) {
 		distances.put(i, b);
 	}
 	
-	public Integer get(ForestTuple i) {
+	public Double get(ForestTuple i) {
 		return distances.get(i);
 	}
 
