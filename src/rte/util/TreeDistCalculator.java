@@ -101,11 +101,25 @@ public class TreeDistCalculator {
 
 
 	private int gamma(Integer n, Integer m) {
-		if (n == null || m == null) {
+		
+		if (n == null) {
 			return 1;
 		}
-
-		if (n == m) {
+		
+		if(m == null) {
+			return 0;
+		}
+		
+		
+		SentenceNode t1Node = T1.get(n);
+		SentenceNode t2Node = T2.get(m);
+		
+		if(t1Node.word == null || t2Node.word == null) {
+			return 1;
+		}
+		
+	
+		if (t1Node.word.equals(t2Node.word)) {
 			return 0;
 		} else {
 			return 1;
