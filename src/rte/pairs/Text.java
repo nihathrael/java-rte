@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 
 public class Text {
 	
-	ArrayList<Sentence> sentences = new ArrayList<Sentence>();
+	public ArrayList<Sentence> sentences = new ArrayList<Sentence>();
 	
 	public static Text fromXML(Element textElement) {
 		

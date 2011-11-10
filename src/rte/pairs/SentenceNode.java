@@ -1,10 +1,9 @@
 package rte.pairs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.w3c.dom.Element;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import rte.Main;
 
@@ -49,88 +48,50 @@ public class SentenceNode {
 		ret.add(this);
 		return ret;
 	}
-
-	public SentenceNode leftMostLeafDescendant() {
+	
+	private SentenceNode leftMostLeafDescendant() {
 		if (isLeaf()) {
 			return this;
 		} else {
 			return children.get(0).leftMostLeafDescendant();
 		}
 	}
-
-	/**
-	 * Return a list of the left most leaf descendents, traversing the nodes in
-	 * postorder
-	 */
-	public ArrayList<SentenceNode> findLMLD() {
-		ArrayList<SentenceNode> nodes = new ArrayList<SentenceNode>();
-		if (!isLeaf()) {
-			for (SentenceNode child : children) {
-				nodes.addAll(child.findLMLD());
+	
+	public int[] leftMostLeafDescendants(ArrayList<SentenceNode> postOrderList) {
+		int[] lmlds = new int[postOrderList.size()];
+		for(int i = 0; i<postOrderList.size(); i++) {
+			SentenceNode lmfd = postOrderList.get(i).leftMostLeafDescendant();
+			lmlds[i] = postOrderList.indexOf(lmfd);
+		}
+		return lmlds;
+	}
+	
+	public ArrayList<Integer> keyRoots(int[] lmlds, ArrayList<SentenceNode> postOrderList) {
+		ArrayList<Integer> krs = new ArrayList<Integer>();
+		
+		for(int i = 0; i<postOrderList.size()-1; i++) {
+			SentenceNode node = postOrderList.get(i);
+			SentenceNode parent = node.relation.parent;
+			
+			// LR_keyroots(T)= {k there exists no k’> k such that l(k)= l(p(k))}.
+			// That is, if k is in LR_keyroots(T) then either k is the root of T or l(k) != l(p(k)),
+			// i.e., k has a left sibling.
+			if(lmlds[i] != lmlds[postOrderList.indexOf(parent)]) {
+				krs.add(i);
 			}
 		}
-		nodes.add(leftMostLeafDescendant());
-		return nodes;
+		
+		// Root node, is always keyroot
+		krs.add(postOrderList.indexOf(postOrderList.get(postOrderList.size()-1)));
+		
+		// Sort, make sure they are in the correct ordering
+		Collections.sort(krs);
+		
+		return krs;
 	}
-
-	public ArrayList<SentenceNode> keyNodes() {
-		ArrayList<SentenceNode> keyNodes = new ArrayList<SentenceNode>();
-		keyNodes.add(this);
-		keyNodes.addAll(findKeyNodes());
-		return keyNodes;
+	
+	public String toString() {
+		return "SN(" + id + "," + word + "," + relation + "";
 	}
-
-	private ArrayList<SentenceNode> findKeyNodes() {
-		ArrayList<SentenceNode> keyNodes = new ArrayList<SentenceNode>();
-		if (children.size() > 1) {
-			for (int i = 1; i < children.size() - 1; ++i) {
-				keyNodes.add(children.get(i));
-			}
-		}
-		for (SentenceNode node : children) {
-			keyNodes.addAll(node.findKeyNodes());
-		}
-		return keyNodes;
-	}
-
-	public int distance(SentenceNode o) {
-		int distance = 0;
-
-		ArrayList<SentenceNode> T1 = postOrder();
-		ArrayList<SentenceNode> T2 = o.postOrder();
-
-		ArrayList<SentenceNode> l1 = findLMLD();
-		ArrayList<SentenceNode> l2 = o.findLMLD();
-
-		ArrayList<SentenceNode> kr1 = keyNodes();
-		ArrayList<SentenceNode> kr2 = o.keyNodes();
-
-		for (SentenceNode i : kr1) {
-			for (SentenceNode j : kr2) {
-				editDist(i, j, T1, T2, l1, l2);
-			}
-		}
-
-		return distance;
-	}
-
-	public void editDist(SentenceNode kr1,
-			SentenceNode kr2, ArrayList<SentenceNode> T1,
-			ArrayList<SentenceNode> T2, ArrayList<SentenceNode> l1,
-			ArrayList<SentenceNode> l2) {
-		ForestDist tmp = new ForestDist();
-
-	}
-
-	private int unitCosts(SentenceNode n, SentenceNode m) {
-		if (n == null || m == null) {
-			return 1;
-		}
-
-		if (n.id.equals(m.id)) {
-			return 0;
-		} else {
-			return 1;
-		}
-	}
+	
 }

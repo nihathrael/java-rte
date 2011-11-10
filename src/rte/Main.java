@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import rte.pairs.AdvPair;
+import rte.pairs.SentenceNode;
 import rte.recognizers.BleuScore;
 import rte.recognizers.EntailmentRecognizer;
 import rte.recognizers.IDFLemmaMatching;
@@ -24,7 +25,9 @@ import rte.recognizers.IDFLexicalMatching;
 import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
+import rte.recognizers.TreeDistMatcher;
 import rte.util.LemmaIDFCalculator;
+import rte.util.TreeDistCalculator;
 import rte.util.WordIDFCalculator;
 
 public class Main {
@@ -45,6 +48,8 @@ public class Main {
 		System.out.println("Done!");
 		
 
+		EntailmentRecognizer rec7 = new TreeDistMatcher();
+		findBestThreshold(pairs, rec7);
 
 		
 		EntailmentRecognizer rec1 = new LexicalMatching();
@@ -64,6 +69,7 @@ public class Main {
 		
 		EntailmentRecognizer rec6 = new BleuScore();
 		findBestThreshold(pairs, rec6);
+		
 		
 		
 	}
