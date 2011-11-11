@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 
 import rte.pairs.AdvPair;
 import rte.pairs.SentenceNode;
-import rte.recognizers.BleuScore;
+import rte.recognizers.BleuScoreMatching;
 import rte.recognizers.EntailmentRecognizer;
 import rte.recognizers.IDFLemmaMatching;
 import rte.recognizers.IDFLexicalMatching;
@@ -26,8 +26,11 @@ import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
 import rte.recognizers.TreeDistMatcher;
+import rte.treedistance.TreeDistCalculator;
+import rte.treedistance.cost.FreeDeletion;
+import rte.treedistance.cost.TreeEditCost;
+import rte.treedistance.cost.WeightedIDF;
 import rte.util.LemmaIDFCalculator;
-import rte.util.TreeDistCalculator;
 import rte.util.WordIDFCalculator;
 
 public class Main {
@@ -47,9 +50,13 @@ public class Main {
 		lemmaIdfs = new LemmaIDFCalculator(pairs);
 		System.out.println("Done!");
 		
-
-		EntailmentRecognizer rec7 = new TreeDistMatcher(wordIdfs);
+		TreeEditCost costFunction1 = new FreeDeletion();
+		EntailmentRecognizer rec7 = new TreeDistMatcher(costFunction1);
 		findBestThreshold(pairs, rec7);
+		
+		TreeEditCost costFunction2 = new WeightedIDF(wordIdfs);
+		EntailmentRecognizer rec8 = new TreeDistMatcher(costFunction2);
+		findBestThreshold(pairs, rec8);
 
 		
 		EntailmentRecognizer rec1 = new LexicalMatching();
@@ -69,11 +76,11 @@ public class Main {
 		
 		
 		for(int i=2; i<5; i++) {
-			EntailmentRecognizer rec6 = new BleuScore(i, true);
+			EntailmentRecognizer rec6 = new BleuScoreMatching(i, true);
 			findBestThreshold(pairs, rec6);
 		}
 		for(int i=2; i<5; i++) {
-			EntailmentRecognizer rec6 = new BleuScore(i, false);
+			EntailmentRecognizer rec6 = new BleuScoreMatching(i, false);
 			findBestThreshold(pairs, rec6);
 		}
 		

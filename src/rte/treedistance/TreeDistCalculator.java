@@ -1,4 +1,4 @@
-package rte.util;
+package rte.treedistance;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,7 @@ import rte.pairs.Forest;
 import rte.pairs.ForestDist;
 import rte.pairs.ForestTuple;
 import rte.pairs.SentenceNode;
+import rte.treedistance.cost.TreeEditCost;
 
 public class TreeDistCalculator {
 
@@ -20,13 +21,13 @@ public class TreeDistCalculator {
 
 	double[][] tree_dist;
 	
-	IDFCalculator idfs;
+	TreeEditCost cost;
 	
 	private static Forest NULLFOREST = new Forest(-1, -1);
 
-	public TreeDistCalculator(SentenceNode o1, SentenceNode o2, IDFCalculator idfs) {
+	public TreeDistCalculator(SentenceNode o1, SentenceNode o2, TreeEditCost cost) {
 		
-		this.idfs = idfs;
+		this.cost = cost;
 		
 		T1 = o1.postOrder();
 		T2 = o2.postOrder();
@@ -105,43 +106,13 @@ public class TreeDistCalculator {
 	}
 
 
-	private double gamma(Integer n, Integer m) {
+	private double gamma(Integer m, Integer n) {
+		SentenceNode a=null, b=null;
 		
-		String valN, valM;
-		
-		
-		if(n==null && m==null) return 0;
-		
-		if(m == null) {
-			return 0;
-		}
-		
-		valM = T2.get(m).word;
-		
-		if (n == null) {
-			return 1.0;
-			/*
-			if(valM == null) {
-				return 1.0;
-			}
-			
-			return idfs.getValueFor(valM);
-			*/
-		}
-		
-		valN = T1.get(n).word;	
-		
-		
-		if(valN == null || valM == null) {
-			return 1.0;
-		}
-		
+		if(m!=null) a=T1.get(m);
+		if(n!=null) b=T2.get(n);
 	
-		if (valN.equals(valM)) {
-			return 0;
-		} else {
-			return 1;
-		}
+		return cost.cost(a,b);
 	}
 
 }

@@ -11,6 +11,9 @@ import rte.pairs.Relation;
 import rte.pairs.Sentence;
 import rte.pairs.SentenceNode;
 import rte.pairs.Text;
+import rte.treedistance.TreeDistCalculator;
+import rte.treedistance.cost.FreeDeletion;
+import rte.treedistance.cost.TreeEditCost;
 
 public class TreeDistCalculatorTest {
 
@@ -102,7 +105,7 @@ public class TreeDistCalculatorTest {
 		
 		WordIDFCalculator idfs = new WordIDFCalculator(pairs);
 		
-		TreeDistCalculator calculator = new TreeDistCalculator(f, f2, idfs);
+		TreeDistCalculator calculator = new TreeDistCalculator(f, f2, new FreeDeletion());
 		assertEquals(2.0, calculator.calculate(), 0.01);
 		
 	}
