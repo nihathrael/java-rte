@@ -88,9 +88,11 @@ public class Main {
 		System.out.println("Searching for best threshold using " + recognizer.getName() + "...");
 		double bestScore = 0.0;
 		double bestThres = 0.05;
+		
+		ArrayList<Score> scores = analyzePairs(pairs, recognizer);
+		
 		for (double i = 0.05; i < 1.0; i += 0.025) {
-			ArrayList<Score> scores = analyzePairs(pairs, recognizer, i);
-			String file = writeScores(scores, "data/results.txt");
+			String file = writeScores(scores, "data/results.txt", i);
 			double score = getEvaluation(file);
 			if(score > bestScore) {
 				bestScore = score;
@@ -103,14 +105,14 @@ public class Main {
 	
 	
 
-	private String writeScores(ArrayList<Score> scores, String outputFile) {
+	private String writeScores(ArrayList<Score> scores, String outputFile, double threshold) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(
 					outputFile));
 			writer.write("ranked: no");
 			writer.newLine();
 			for (Score score : scores) {
-				writer.write(score.toString());
+				writer.write(score.getOutputString(threshold));
 				writer.newLine();
 			}
 
@@ -146,12 +148,12 @@ public class Main {
 	}
 
 	private ArrayList<Score> analyzePairs(ArrayList<AdvPair> pairs, 
-			EntailmentRecognizer recognizer, double threshold) {
+			EntailmentRecognizer recognizer) {
 		
 		ArrayList<Score> scores = new ArrayList<Score>();
 		for (AdvPair pair : pairs) {
 			
-			boolean entailment = recognizer.entails(pair.text, pair.hypothesis, threshold);
+			double entailment = recognizer.entails(pair.text, pair.hypothesis);
 			
 			Score tmpScore = new Score(pair.id, entailment);
 			scores.add(tmpScore);

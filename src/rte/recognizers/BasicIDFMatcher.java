@@ -16,7 +16,7 @@ public abstract class BasicIDFMatcher implements EntailmentRecognizer {
 
 	abstract String selectKey(SentenceNode node);
 
-	public boolean entails(Text text, Text hypothesis, double threshold) {
+	public double entails(Text text, Text hypothesis) {
 
 		ArrayList<SentenceNode> textNodes = text.getAllSentenceNodes();
 		ArrayList<SentenceNode> hypoNodes = hypothesis.getAllSentenceNodes();
@@ -37,7 +37,7 @@ public abstract class BasicIDFMatcher implements EntailmentRecognizer {
 			}
 		}
 
-		return (idfSumMatch / idfHypoSum > threshold);
+		return (idfSumMatch / idfHypoSum);
 	}
 
 	boolean match(SentenceNode hypoNode, SentenceNode textNode) {

@@ -14,7 +14,7 @@ public class BleuScore implements EntailmentRecognizer {
 		mean = useArithmeticMean;
 	}
 	
-	public boolean entails(Text text, Text hypothesis, double threshold) {
+	public double entails(Text text, Text hypothesis) {
 		ArrayList<ArrayList<String>> textGrams, hypoGrams;
 		textGrams = calcSetOfN_grams(text.getWordArrayWithoutPunctuation(), 1, maxN);
 		hypoGrams = calcSetOfN_grams(hypothesis.getWordArrayWithoutPunctuation(), 1, maxN);
@@ -30,7 +30,7 @@ public class BleuScore implements EntailmentRecognizer {
 		
 		if(mean) bleuScore = Math.exp(bleuScore) / maxN;
 		//System.out.println("BleuScore: " + bleuScore);
-		return bleuScore > threshold;
+		return bleuScore;
 	}
 	
 	

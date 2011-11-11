@@ -15,7 +15,7 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 	}
 
 
-	public boolean entails(Text text, Text hypothesis, double threshold) {
+	public double entails(Text text, Text hypothesis) {
 
 		Sentence bestmatchSentenceH=null, bestmatchSentenceT=null;
 		
@@ -46,7 +46,7 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 		//double value = 1.0 / (1.0+minDistance);
 		//System.out.println(value);
 		minDistance = Math.pow(minDistance, 2.0);
-		return minDistance < threshold;
+		return minDistance;
 	}
 
 	@Override

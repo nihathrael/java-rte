@@ -4,7 +4,7 @@ import rte.pairs.Text;
 
 public interface EntailmentRecognizer {
 	
-	public boolean entails(Text text, Text hypothesis, double threshold);
+	public double entails(Text text, Text hypothesis);
 	
 	public String getName();
 	

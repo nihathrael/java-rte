@@ -6,15 +6,15 @@ public class Score {
 	private static final String NO = "NO";
 	
 	final private int id;
-	final private boolean entailment; 
+	final private double entailment; 
 	
-	public Score(int id, boolean entailment) {
+	public Score(int id, double entailment) {
 		this.id = id;
 		this.entailment = entailment;
 	}
 	
-	public String toString() {
-		if(entailment) {
+	public String getOutputString(double threshold) {
+		if(entailment > threshold) {
 			return id + " " + YES;
 		} else {
 			return id + " " + NO;

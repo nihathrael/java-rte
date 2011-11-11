@@ -8,7 +8,7 @@ import rte.pairs.Text;
 public abstract class BasicMatcher implements EntailmentRecognizer {
 
 
-	public boolean entails(Text text, Text hypothesis, double threshold) {
+	public double entails(Text text, Text hypothesis) {
 	
 		ArrayList<SentenceNode> textNodes = text.getAllSentenceNodes();
 		ArrayList<SentenceNode> hypoNodes = hypothesis.getAllSentenceNodes();
@@ -25,7 +25,7 @@ public abstract class BasicMatcher implements EntailmentRecognizer {
 	
 		double wordNum = hypoNodes.size();
 	
-		return (matches / wordNum > threshold);
+		return matches / wordNum;
 	}
 
 	abstract boolean match(SentenceNode hypoNode, SentenceNode textNode);
