@@ -17,7 +17,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import rte.pairs.AdvPair;
-import rte.pairs.SentenceNode;
 import rte.recognizers.BleuScoreMatching;
 import rte.recognizers.EntailmentRecognizer;
 import rte.recognizers.IDFLemmaMatching;
@@ -26,10 +25,10 @@ import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
 import rte.recognizers.TreeDistMatcher;
-import rte.treedistance.TreeDistCalculator;
 import rte.treedistance.cost.FreeDeletion;
 import rte.treedistance.cost.TreeEditCost;
 import rte.treedistance.cost.WeightedIDF;
+import rte.treedistance.cost.WeightedLemmaIDF;
 import rte.util.LemmaIDFCalculator;
 import rte.util.WordIDFCalculator;
 
@@ -50,14 +49,17 @@ public class Main {
 		lemmaIdfs = new LemmaIDFCalculator(pairs);
 		System.out.println("Done!");
 		
-		TreeEditCost costFunction1 = new FreeDeletion();
-		EntailmentRecognizer rec7 = new TreeDistMatcher(costFunction1);
-		findBestThreshold(pairs, rec7);
+		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
+		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
+		findBestThreshold(pairs, rec9);
 		
 		TreeEditCost costFunction2 = new WeightedIDF(wordIdfs);
 		EntailmentRecognizer rec8 = new TreeDistMatcher(costFunction2);
 		findBestThreshold(pairs, rec8);
-
+		
+		TreeEditCost costFunction1 = new FreeDeletion();
+		EntailmentRecognizer rec7 = new TreeDistMatcher(costFunction1);
+		findBestThreshold(pairs, rec7);
 		
 		EntailmentRecognizer rec1 = new LexicalMatching();
 		findBestThreshold(pairs, rec1);

@@ -23,8 +23,12 @@ public class Sentence {
 
 		// Create nodes
 		for (int i = 0; i < sentenceNodeList.getLength(); ++i) {
-			sentence.nodes.add(SentenceNode.fromXML((Element) sentenceNodeList
-					.item(i)));
+			SentenceNode fromXML = SentenceNode
+					.fromXML((Element) sentenceNodeList.item(i));
+			if (fromXML.id.startsWith("E")) {
+				continue;
+			}
+			sentence.nodes.add(fromXML);
 		}
 
 		// Create relations
@@ -33,17 +37,22 @@ public class Sentence {
 			Element relation = (Element) node.getElementsByTagName("relation")
 					.item(0);
 			String nodeId = node.getAttribute("id");
+			if(nodeId.contains("E")) {
+				continue; // Bad E node, skip!
+			}
 			SentenceNode mainNode = getSentenceNodeById(nodeId, sentence);
 			if (relation != null) {
-				String parentId = relation.getAttribute("parent");
-				SentenceNode parent = getSentenceNodeById(parentId, sentence);
-
-				String type = Main.getTagValue("relation", node);
-
-				Relation rel = new Relation(mainNode, parent, type);
-				mainNode.relation = rel;
-				parent.children.add(mainNode);
-				// System.out.println("Relation created!");
+				String parentId = relation.getAttribute("parent").trim();
+				if (!parentId.contains("E")) {
+					SentenceNode parent = getSentenceNodeById(parentId, sentence);
+					
+					String type = Main.getTagValue("relation", node);
+					
+					Relation rel = new Relation(mainNode, parent, type);
+					mainNode.relation = rel;
+					parent.children.add(mainNode);
+					// System.out.println("Relation created!");
+				}
 			}
 			String antecedentId = Main.getTagValue("antecedent", node);
 			if (antecedentId != null) {
@@ -70,11 +79,11 @@ public class Sentence {
 	public ArrayList<SentenceNode> getAllSentenceNodes() {
 		return nodes;
 	}
-	
+
 	public String toString() {
 		ArrayList<SentenceNode> nodes = getAllSentenceNodes();
 		StringBuilder result = new StringBuilder();
-		for(SentenceNode node : nodes) {
+		for (SentenceNode node : nodes) {
 			result.append(node.word);
 			result.append(" ");
 		}

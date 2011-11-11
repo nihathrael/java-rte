@@ -3,11 +3,11 @@ package rte.treedistance.cost;
 import rte.pairs.SentenceNode;
 import rte.util.IDFCalculator;
 
-public class WeightedIDF implements TreeEditCost {
+public class WeightedLemmaIDF implements TreeEditCost {
 
 	IDFCalculator idfCalc;
 
-	public WeightedIDF(IDFCalculator idfs) {
+	public WeightedLemmaIDF(IDFCalculator idfs) {
 		idfCalc = idfs;
 	}
 
@@ -20,11 +20,11 @@ public class WeightedIDF implements TreeEditCost {
 
 		// Insert
 		if (m == null) {
-			return idfCalc.getValueFor(n.word);
+			return idfCalc.getValueFor(n.lemma);
 		}
 		
 		// Substitute
-		if (n.word.equals(m.word)) {
+		if (n.lemma.equals(m.lemma)) {
 			return 0.0;
 		} else {
 			return 1.0;

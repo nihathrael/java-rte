@@ -5,7 +5,6 @@ import rte.pairs.SentenceNode;
 import rte.pairs.Text;
 import rte.treedistance.TreeDistCalculator;
 import rte.treedistance.cost.TreeEditCost;
-import rte.util.IDFCalculator;
 
 public class TreeDistMatcher implements EntailmentRecognizer {
 	
@@ -30,7 +29,7 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 				TreeDistCalculator calculator = new TreeDistCalculator(textNode, hypoNode, cost);
 				double dist = calculator.calculate();
 				if(dist< minDistance) {
-					minDistance = dist; // / hsize;
+					minDistance = dist / hsize;
 					bestmatchSentenceH = sentence;
 					bestmatchSentenceT = sentence2;
 				}
@@ -47,7 +46,7 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 		double value = 1.0 / (1.0+minDistance);
 		//System.out.println(value);
 		//minDistance = Math.pow(minDistance, 2.0);
-		return value;
+		return 1-minDistance*10;
 	}
 
 	@Override

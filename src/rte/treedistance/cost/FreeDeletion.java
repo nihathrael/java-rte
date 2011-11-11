@@ -6,14 +6,14 @@ public class FreeDeletion implements TreeEditCost {
 
 	@Override
 	public double cost(SentenceNode m, SentenceNode n) {	
-		if(n==null && m==null) return 0.0;
 		
+		// Delete
 		if(n == null) return 0.0;
+		
+		// Insert
 		if(m == null) return 1.0;
 		
-		if(m.word == null || n.word == null)
-			return 0.0;
-		
+		//substitute
 		if (m.word.equals(n.word)) {
 			return 0.0;
 		} else {
