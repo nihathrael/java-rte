@@ -41,6 +41,16 @@ public class Text {
 		return result;
 	}
 
+	public String toString() {
+		ArrayList<SentenceNode> nodes = getAllSentenceNodes();
+		StringBuilder result = new StringBuilder();
+		for (SentenceNode node : nodes) {
+			result.append(node.word);
+			result.append(" ");
+		}
+		return result.toString().trim();
+	}
+	
 	public ArrayList<String> getWordArrayWithoutPunctuation() {
 		ArrayList<String> result = new ArrayList<String>();
 		ArrayList<SentenceNode> allnodes = getAllSentenceNodes();

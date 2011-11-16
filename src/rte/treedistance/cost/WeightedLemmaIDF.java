@@ -20,7 +20,9 @@ public class WeightedLemmaIDF implements TreeEditCost {
 
 		// Insert
 		if (m == null) {
+
 			return idfCalc.getValueFor(n.lemma);
+			
 		}
 		
 		// Substitute
