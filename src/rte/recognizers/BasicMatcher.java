@@ -33,7 +33,6 @@ public abstract class BasicMatcher implements EntailmentRecognizer {
 
 	abstract boolean match(SentenceNode hypoNode, SentenceNode textNode);
 
-	@Override
 	public String getName() {
 		return null;
 	}

@@ -4,7 +4,6 @@ import rte.pairs.SentenceNode;
 
 public class FreeDeletion implements TreeEditCost {
 
-	@Override
 	public double cost(SentenceNode m, SentenceNode n) {	
 		
 		// Delete

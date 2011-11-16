@@ -11,12 +11,12 @@ public class WeightedLemmaIDF implements TreeEditCost {
 		idfCalc = idfs;
 	}
 
-	@Override
 	public double cost(SentenceNode m, SentenceNode n) {
 
 		// Deletion
-		if (n == null)
+		if (n == null) {
 			return 0.0;
+		}
 
 		// Insert
 		if (m == null) {
@@ -29,7 +29,7 @@ public class WeightedLemmaIDF implements TreeEditCost {
 		if (n.lemma.equals(m.lemma)) {
 			return 0.0;
 		} else {
-			return 1.0;
+			return idfCalc.getValueFor(n.lemma);
 		}
 	}
 
