@@ -19,32 +19,35 @@ import rte.pairs.SentenceNode;
 import rte.pairs.Text;
 import rte.treedistance.TreeDistCalculator;
 import rte.treedistance.cost.TreeEditCost;
+import rte.util.LemmaIDFCalculator;
 
-public class MahoutMatcher {
+public class MahoutMatcher implements EntailmentRecognizer {
 
-	TreeEditCost cost;
 	private StaticWordValueEncoder lemmasEncoder;
 	private ContinuousValueEncoder encoder;
+	private ContinuousValueEncoder encoder2;
+	private ContinuousValueEncoder encoder3;
 
-	int FEATURES = 2;
+	int FEATURES = 4;
+	private TreeDistMatcher treeDistMatcher;
+	private BleuScoreMatching bleuScoreMatching;
+	private IDFLemmaMatching idfLemmaMatcher;
+	private OnlineLogisticRegression learningAlgorithm;
 
-	public MahoutMatcher(TreeEditCost costFunction, ArrayList<AdvPair> trainingData) {
-		this.cost = costFunction;
+	public MahoutMatcher(TreeEditCost costFunction, ArrayList<AdvPair> trainingData, LemmaIDFCalculator idfCalc) {
+		treeDistMatcher = new TreeDistMatcher(costFunction);
+		bleuScoreMatching = new BleuScoreMatching(2, false);
+		idfLemmaMatcher = new IDFLemmaMatching(idfCalc);		
 		lemmasEncoder = new StaticWordValueEncoder("lemmas-text");
 		encoder = new ContinuousValueEncoder("TreeDist");
-		ArrayList<AdvPair> pairs = new ArrayList<AdvPair>(trainingData); 
+		encoder2 = new ContinuousValueEncoder("BleuScore");
+		encoder3 = new ContinuousValueEncoder("IDFLemma");
 
-		OnlineLogisticRegression learningAlgorithm = new OnlineLogisticRegression(
+		learningAlgorithm = new OnlineLogisticRegression(
 				2, FEATURES, new L1());
 
-		int learningSamples = (int) (pairs.size() * 0.8);
-
-		Random rand = new Random();
-		for (int i = 0; i <= learningSamples; ++i) {
-			int choice = rand.nextInt(pairs.size());
-			AdvPair pair = pairs.remove(choice);
-
-			Vector v = encodeVector(pair);
+		for (AdvPair pair: trainingData) {
+			Vector v = encodeVector(pair.text, pair.hypothesis);
 			int entails = 0;
 			if (pair.entailment) {
 				entails = 1;
@@ -52,21 +55,15 @@ public class MahoutMatcher {
 			learningAlgorithm.train(entails, v);
 		}
 
-		for (AdvPair pair : pairs) {
-			Vector v = encodeVector(pair);
-			Vector p = new DenseVector(FEATURES);
-			learningAlgorithm.classifyFull(p, v);
-			int estimated = p.maxValueIndex();
-			System.out.println(p.get(estimated));
-		}
-
 	}
 
-	private Vector encodeVector(AdvPair pair) {
+	private Vector encodeVector(Text text, Text hypothesis) {
 		Vector v = new RandomAccessSparseVector(FEATURES);
 		// Add Tree Dist
 		encoder.addToVector(
-				String.valueOf(getTreeCosts(pair.text, pair.hypothesis)), v);
+				String.valueOf(treeDistMatcher.entails(text, hypothesis)), v);
+		encoder2.addToVector(String.valueOf(bleuScoreMatching.entails(text, hypothesis)), v);
+		encoder3.addToVector(String.valueOf(idfLemmaMatcher.entails(text, hypothesis)), v);
 		// for(SentenceNode node: pair.text.getAllSentenceNodes()) {
 		// lemmasEncoder.addToVector(node.lemma, v);
 		// }
@@ -76,31 +73,16 @@ public class MahoutMatcher {
 		return v;
 	}
 
-	public double getTreeCosts(Text text, Text hypothesis) {
+	public double entails(Text text, Text hypothesis) {
+		Vector v = encodeVector(text, hypothesis);
+		Vector p = new DenseVector(FEATURES);
+		learningAlgorithm.classifyFull(p, v);
+		int estimated = p.maxValueIndex();
+		System.out.println(p.get(estimated));
+		return p.get(estimated);
+	}
 
-		Sentence bestmatchSentenceH = null, bestmatchSentenceT = null;
-
-		double minDistance = Double.MAX_VALUE;
-		for (Sentence sentence : hypothesis.sentences) {
-			SentenceNode hypoNode = sentence.getRootNode();
-			int hsize = sentence.getAllSentenceNodes().size();
-			for (Sentence sentence2 : text.sentences) {
-				SentenceNode textNode = sentence2.getRootNode();
-				// System.out.println("Comparing: " + node + node2);
-				TreeDistCalculator calculator = new TreeDistCalculator(
-						textNode, hypoNode, cost);
-				double dist = calculator.calculate();
-				if (dist < minDistance) {
-					minDistance = dist / hsize;
-					bestmatchSentenceH = sentence;
-					bestmatchSentenceT = sentence2;
-				}
-			}
-		}
-
-		double value = 1.0 / (1.0 + minDistance);
-		// System.out.println(value);
-		// minDistance = Math.pow(minDistance, 2.0);
-		return 1 - minDistance * 10;
+	public String getName() {
+		return MahoutMatcher.class.getSimpleName();
 	}
 }

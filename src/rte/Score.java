@@ -5,8 +5,8 @@ public class Score {
 	private static final String YES = "YES";
 	private static final String NO = "NO";
 	
-	final private int id;
-	final private double entailment; 
+	public final int id;
+	public final double entailment; 
 	
 	public Score(int id, double entailment) {
 		this.id = id;

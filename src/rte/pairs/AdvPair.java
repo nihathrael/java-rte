@@ -15,7 +15,7 @@ public class AdvPair implements Comparable<AdvPair> {
 		AdvPair pair = new AdvPair();
 		pair.id = Integer.parseInt(pairElement.getAttribute("id"));
 		pair.task = pairElement.getAttribute("task");
-		pair.entailment = pairElement.getAttribute("entailment").equals("yes");
+		pair.entailment = pairElement.getAttribute("entailment").equals("YES");
 		
 		Element text = (Element)pairElement.getElementsByTagName("text").item(0);
 		pair.text = Text.fromXML(text);

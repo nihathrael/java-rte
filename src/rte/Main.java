@@ -1,12 +1,12 @@
 package rte;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,6 +37,8 @@ public class Main {
 	
 	WordIDFCalculator wordIdfs = null;
 	LemmaIDFCalculator lemmaIdfs = null;
+	
+	HashMap<Integer, Boolean> scoreMapping = new HashMap<Integer, Boolean>();
 
 	public Main() {
 		
@@ -50,8 +52,24 @@ public class Main {
 		lemmaIdfs = new LemmaIDFCalculator(pairs);
 		System.out.println("Done!");
 		
+		int learningSamples = (int) (pairs.size() * 0.8);
+		ArrayList<AdvPair> learningData = new ArrayList<AdvPair>();
+		ArrayList<AdvPair> testData = new ArrayList<AdvPair>(pairs); 
+
+		Random rand = new Random();
+		for (int i = 0; i <= learningSamples; ++i) {
+			int choice = rand.nextInt(testData.size());
+			AdvPair pair = testData.remove(choice);
+			learningData.add(pair);
+		}
+		
+		System.out.println(learningData.size());
+		System.out.println(testData.size());
+
+		
 		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
-		MahoutMatcher mlearing = new MahoutMatcher(costFunction3, pairs);
+		MahoutMatcher mlearing = new MahoutMatcher(costFunction3, learningData, lemmaIdfs);
+		findBestThreshold(pairs, mlearing);
 		
 		
 		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
@@ -104,11 +122,19 @@ public class Main {
 		
 		ArrayList<Score> scores = analyzePairs(pairs, recognizer);
 		
+		int correct = 0;
+		double tmpScore = 0.0; 
 		for (double i = 0.05; i < 1.0; i += 0.025) {
-			String file = writeScores(scores, "data/results.txt", i);
-			double score = getEvaluation(file);
-			if(score > bestScore) {
-				bestScore = score;
+			correct = 0;
+			for(Score score: scores) {
+				if(score.entailment > i && scoreMapping.get(score.id)) {
+					correct++;
+				}
+			}
+			System.out.println(i);
+			tmpScore = ((double)correct)/scores.size();
+			if(tmpScore > bestScore) {
+				bestScore = tmpScore;
 				bestThres = i;
 			}
 		}
@@ -134,30 +160,6 @@ public class Main {
 			e.printStackTrace();
 		}
 		return outputFile;
-	}
-
-	private double getEvaluation(String resultsFile) {
-		double results = -1.0;
-		try {
-			// Execute command
-			String[] commands = new String[] { "python2", "data/eval_rte.py",
-					"data/RTE2_dev.xml", resultsFile };
-			Process child = Runtime.getRuntime().exec(commands);
-
-			// Get the input stream and read from it
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					child.getInputStream()));
-			String c;
-			while ((c = in.readLine()) != null) {
-				String[] parts = c.split(" = ");
-				results = Double.parseDouble(parts[1]);
-			}
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return results;
-
 	}
 
 	private ArrayList<Score> analyzePairs(ArrayList<AdvPair> pairs, 
@@ -195,6 +197,7 @@ public class Main {
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
 					AdvPair pair = AdvPair.fromXML(eElement);
+					scoreMapping.put(pair.id, pair.entailment);
 					pairs.add(pair);
 				}
 			}
