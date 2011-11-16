@@ -11,7 +11,6 @@ public class WeightedIDF implements TreeEditCost {
 		idfCalc = idfs;
 	}
 
-	@Override
 	public double cost(SentenceNode m, SentenceNode n) {
 
 		// Deletion

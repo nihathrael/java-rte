@@ -24,6 +24,7 @@ import rte.recognizers.IDFLexicalMatching;
 import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
+import rte.recognizers.MahoutMatcher;
 import rte.recognizers.TreeDistMatcher;
 import rte.treedistance.cost.FreeDeletion;
 import rte.treedistance.cost.TreeEditCost;
@@ -50,6 +51,8 @@ public class Main {
 		System.out.println("Done!");
 		
 		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
+		MahoutMatcher mlearing = new MahoutMatcher(costFunction3, pairs);
+		
 		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
 		findBestThreshold(pairs, rec9);
 		

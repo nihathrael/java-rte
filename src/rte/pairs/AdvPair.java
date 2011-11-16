@@ -27,7 +27,6 @@ public class AdvPair implements Comparable<AdvPair> {
 		return pair;
 	}
 	
-	@Override
 	public int compareTo(AdvPair o) {
 		return new Integer(id).compareTo(o.id);
 	}

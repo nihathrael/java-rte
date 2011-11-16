@@ -49,7 +49,6 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 		return 1-minDistance*10;
 	}
 
-	@Override
 	public String getName() {
 		return TreeDistMatcher.class.getSimpleName() + 
 				" with cost function: " + cost.getClass().getSimpleName();
