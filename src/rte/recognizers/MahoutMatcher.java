@@ -1,5 +1,7 @@
 package rte.recognizers;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -23,59 +25,54 @@ public class MahoutMatcher {
 	TreeEditCost cost;
 	private StaticWordValueEncoder lemmasEncoder;
 	private ContinuousValueEncoder encoder;
-	
-	int FEATURES = 2;
-	
 
-	public MahoutMatcher(TreeEditCost costFunction, List<AdvPair> trainingData) {
+	int FEATURES = 2;
+
+	public MahoutMatcher(TreeEditCost costFunction, ArrayList<AdvPair> trainingData) {
 		this.cost = costFunction;
 		lemmasEncoder = new StaticWordValueEncoder("lemmas-text");
 		encoder = new ContinuousValueEncoder("TreeDist");
-		
-		OnlineLogisticRegression learningAlgorithm =
-				new OnlineLogisticRegression(
-				2, FEATURES, new L1());/*
-				.alpha(1).stepOffset(10)
-				.decayExponent(0.9)
-				.lambda(3.0e-5)
-				.learningRate(20);*/
-		
-		int learningSamples = (int) (trainingData.size()*0.8);
-		
+		ArrayList<AdvPair> pairs = new ArrayList<AdvPair>(trainingData); 
+
+		OnlineLogisticRegression learningAlgorithm = new OnlineLogisticRegression(
+				2, FEATURES, new L1());
+
+		int learningSamples = (int) (pairs.size() * 0.8);
+
 		Random rand = new Random();
-		for(int i=0; i<=learningSamples;++i) {
-			int choice = rand.nextInt(trainingData.size());
-			AdvPair pair = trainingData.remove(choice);
-			
+		for (int i = 0; i <= learningSamples; ++i) {
+			int choice = rand.nextInt(pairs.size());
+			AdvPair pair = pairs.remove(choice);
+
 			Vector v = encodeVector(pair);
 			int entails = 0;
-			if(pair.entailment) {
+			if (pair.entailment) {
 				entails = 1;
 			}
 			learningAlgorithm.train(entails, v);
 		}
-		
-		for(AdvPair pair: trainingData) {
+
+		for (AdvPair pair : pairs) {
 			Vector v = encodeVector(pair);
 			Vector p = new DenseVector(FEATURES);
 			learningAlgorithm.classifyFull(p, v);
 			int estimated = p.maxValueIndex();
 			System.out.println(p.get(estimated));
 		}
-		
 
 	}
 
 	private Vector encodeVector(AdvPair pair) {
 		Vector v = new RandomAccessSparseVector(FEATURES);
 		// Add Tree Dist
-		encoder.addToVector(String.valueOf(getTreeCosts(pair.text, pair.hypothesis)), v);
-		//for(SentenceNode node: pair.text.getAllSentenceNodes()) {
-		//	lemmasEncoder.addToVector(node.lemma, v);
-		//}
-		//for(SentenceNode node: pair.hypothesis.getAllSentenceNodes()) {
-//			lemmasEncoder2.addToVector(node.lemma, v);
-	//	}
+		encoder.addToVector(
+				String.valueOf(getTreeCosts(pair.text, pair.hypothesis)), v);
+		// for(SentenceNode node: pair.text.getAllSentenceNodes()) {
+		// lemmasEncoder.addToVector(node.lemma, v);
+		// }
+		// for(SentenceNode node: pair.hypothesis.getAllSentenceNodes()) {
+		// lemmasEncoder2.addToVector(node.lemma, v);
+		// }
 		return v;
 	}
 
@@ -100,13 +97,6 @@ public class MahoutMatcher {
 				}
 			}
 		}
-
-		/*
-		 * System.out.println("Best matching Sentences with Distance: " +
-		 * minDistance); System.out.println("Hypothesis: " +
-		 * bestmatchSentenceH.toString()); System.out.println("Text: " +
-		 * bestmatchSentenceT.toString()); System.out.println();
-		 */
 
 		double value = 1.0 / (1.0 + minDistance);
 		// System.out.println(value);

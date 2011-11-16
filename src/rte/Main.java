@@ -53,6 +53,7 @@ public class Main {
 		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
 		MahoutMatcher mlearing = new MahoutMatcher(costFunction3, pairs);
 		
+		
 		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
 		findBestThreshold(pairs, rec9);
 		
