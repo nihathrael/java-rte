@@ -52,23 +52,12 @@ public class Main {
 		lemmaIdfs = new LemmaIDFCalculator(pairs);
 		System.out.println("Done!");
 		
-		int learningSamples = (int) (pairs.size() * 0.8);
-		ArrayList<AdvPair> learningData = new ArrayList<AdvPair>();
-		ArrayList<AdvPair> testData = new ArrayList<AdvPair>(pairs); 
-
-		Random rand = new Random();
-		for (int i = 0; i <= learningSamples; ++i) {
-			int choice = rand.nextInt(testData.size());
-			AdvPair pair = testData.remove(choice);
-			learningData.add(pair);
-		}
 		
+		
+		
+		crossValidate(pairs);
 		
 		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
-		MahoutMatcher mlearing = new MahoutMatcher(costFunction3, learningData, lemmaIdfs);
-		findBestThreshold(testData, mlearing);
-		
-		
 		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
 		findBestThreshold(pairs, rec9);
 		
@@ -109,10 +98,63 @@ public class Main {
 		
 	}
 
+	public void crossValidate(ArrayList<AdvPair> pairs) {
+		/*
+		10-fold Cross-Validation (CV) procedure:
+			1. divide data in 10 stratifed folds of approximately equal size
+			2. for i = 1 to 10 do:
+			I use foldi as test data
+			I use other 9 folds as training data
+			I calculate accuracy score on foldi
+			3. Finally average 10 scores to get overall accuracy score
+		*/
+		
+		
+		System.out.println("Cross-Validation with 10 samples started");
+		
+		ArrayList<ArrayList<AdvPair>> folds = new ArrayList<ArrayList<AdvPair>>();
+
+		
+		for(int i=0; i<10; i++) {
+			folds.add(new ArrayList<AdvPair>());
+		}
+		
+		for(int i=0; i<pairs.size(); i++) {
+			folds.get(i%10).add(pairs.get(i));
+		}
+		
+		ArrayList<AdvPair> learningData, testData;
+		learningData = new ArrayList<AdvPair>();
+		testData = new ArrayList<AdvPair>();
+		
+		double avgScore=0.0;
+		
+		for(int i=0; i<10; i++) {
+			
+			testData.addAll(folds.get(i));
+			for(int j=0; j<10; j++) {
+				if(i!=j)
+					learningData.addAll(folds.get(j));
+			}
+			
+			TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
+			MahoutMatcher mlearing = new MahoutMatcher(costFunction3, learningData, lemmaIdfs);
+			double best = findBestThreshold(testData, mlearing);
+			
+			avgScore += best;
+			
+			learningData.clear();
+			testData.clear();
+		}
+		
+		avgScore /= 10;
+		
+		System.out.println("Cross-Validation with 10 folds finished. Average Score is: " + avgScore);
+
+	}
 
 
-
-	private void findBestThreshold(ArrayList<AdvPair> pairs, EntailmentRecognizer recognizer) {
+	private double findBestThreshold(ArrayList<AdvPair> pairs, EntailmentRecognizer recognizer) {
 		System.out.println("Searching for best threshold using " + recognizer.getName() + "...");
 		double bestScore = 0.0;
 		double bestThres = 0.05;
@@ -138,6 +180,7 @@ public class Main {
 			}
 		}
 		System.out.println("Done! Found best results for " + bestThres + " with score: " + bestScore);
+		return bestScore;
 	}
 	
 	
