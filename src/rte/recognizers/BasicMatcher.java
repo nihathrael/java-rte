@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import rte.pairs.SentenceNode;
 import rte.pairs.Text;
+import rte.util.PolarityCalculator;
 
 public abstract class BasicMatcher implements EntailmentRecognizer {
 
@@ -25,6 +26,8 @@ public abstract class BasicMatcher implements EntailmentRecognizer {
 	
 		double wordNum = hypoNodes.size();
 	
+		//if(!PolarityCalculator.polarity(text, hypothesis)) matches = 0;
+		
 		return matches / wordNum;
 	}
 
