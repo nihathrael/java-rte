@@ -1,5 +1,7 @@
 package rte.util;
 
+import java.util.ArrayList;
+
 import rte.pairs.Text;
 
 public class PolarityCalculator {
@@ -10,14 +12,18 @@ public class PolarityCalculator {
 	
 	
 	public static boolean polarity(Text T, Text H) {
-		return getPolIndex(T.toString()) == getPolIndex(H.toString());
+		return getPolIndex(T.getWordArray()) == getPolIndex(H.getWordArray());
 	}
 	
 	
-	private static int getPolIndex(String s) {
+	private static int getPolIndex(ArrayList<String> s) {
 		int count=0;
 		for(String n : negatives) {
-			if(s.contains(n)) count++;
+			for(String word: s) {
+				if(word.equals(n)){
+					count++;
+				}
+			}
 		}
 		return count;
 	}

@@ -63,13 +63,10 @@ public class Main {
 			learningData.add(pair);
 		}
 		
-		System.out.println(learningData.size());
-		System.out.println(testData.size());
-
 		
 		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
 		MahoutMatcher mlearing = new MahoutMatcher(costFunction3, learningData, lemmaIdfs);
-		findBestThreshold(pairs, mlearing);
+		findBestThreshold(testData, mlearing);
 		
 		
 		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
@@ -130,8 +127,10 @@ public class Main {
 				if(score.entailment > i && scoreMapping.get(score.id)) {
 					correct++;
 				}
+				if(score.entailment <= i && !scoreMapping.get(score.id)) {
+					correct++;
+				}
 			}
-			System.out.println(i);
 			tmpScore = ((double)correct)/scores.size();
 			if(tmpScore > bestScore) {
 				bestScore = tmpScore;

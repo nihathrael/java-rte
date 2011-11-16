@@ -26,7 +26,7 @@ public abstract class BasicMatcher implements EntailmentRecognizer {
 	
 		double wordNum = hypoNodes.size();
 	
-		//if(!PolarityCalculator.polarity(text, hypothesis)) matches = 0;
+		if(!PolarityCalculator.polarity(text, hypothesis)) matches = 0;
 		
 		return matches / wordNum;
 	}
