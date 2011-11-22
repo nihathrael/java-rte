@@ -73,7 +73,6 @@ public class MahoutMatcher implements EntailmentRecognizer {
 		encoder3.addToVector(String.valueOf(idfLemmaMatcher.entails(text, hypothesis)), v);
 		encoder4.addToVector(String.valueOf(lemmaMatcher.entails(text, hypothesis)), v);
 		encoder5.addToVector(String.valueOf(lemmaAndPosMatcher.entails(text, hypothesis)), v);
-		//System.out.println(GramCalculator.getNrOfGramMatches(text, hypothesis, 2));
 		encoder6.addToVector(String.valueOf(GramCalculator.getNrOfGramMatches(text, hypothesis, 2)), v);
 		wve.addToVector(String.valueOf(PolarityCalculator.polarity(text, hypothesis)), v);
 		
