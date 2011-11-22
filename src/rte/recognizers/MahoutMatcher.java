@@ -14,6 +14,7 @@ import org.apache.mahout.vectorizer.encoders.WordValueEncoder;
 import rte.pairs.AdvPair;
 import rte.pairs.Text;
 import rte.treedistance.cost.TreeEditCost;
+import rte.util.GramCalculator;
 import rte.util.LemmaIDFCalculator;
 import rte.util.PolarityCalculator;
 
@@ -22,6 +23,9 @@ public class MahoutMatcher implements EntailmentRecognizer {
 	private ContinuousValueEncoder encoder;
 	private ContinuousValueEncoder encoder2;
 	private ContinuousValueEncoder encoder3;
+	private ContinuousValueEncoder encoder4;
+	private ContinuousValueEncoder encoder5;
+	private ContinuousValueEncoder encoder6;
 
 	int FEATURES = 100;
 	private TreeDistMatcher treeDistMatcher;
@@ -30,8 +34,7 @@ public class MahoutMatcher implements EntailmentRecognizer {
 	private OnlineLogisticRegression learningAlgorithm;
 	private WordValueEncoder wve;
 	private LemmaMatching lemmaMatcher;
-	private ContinuousValueEncoder encoder4;
-	private ContinuousValueEncoder encoder5;
+
 	private LemmaAndPosMatching lemmaAndPosMatcher;
 
 	public MahoutMatcher(TreeEditCost costFunction,
@@ -47,7 +50,7 @@ public class MahoutMatcher implements EntailmentRecognizer {
 		encoder3 = new ContinuousValueEncoder("IDFLemma");
 		encoder4 = new ContinuousValueEncoder("Lemma");
 		encoder5 = new ContinuousValueEncoder("LemmaAndPos");
-		
+		encoder6 = new ContinuousValueEncoder("Bigram-Matches");
 
 		learningAlgorithm = new OnlineLogisticRegression(2, FEATURES, new L1());
 
@@ -70,6 +73,8 @@ public class MahoutMatcher implements EntailmentRecognizer {
 		encoder3.addToVector(String.valueOf(idfLemmaMatcher.entails(text, hypothesis)), v);
 		encoder4.addToVector(String.valueOf(lemmaMatcher.entails(text, hypothesis)), v);
 		encoder5.addToVector(String.valueOf(lemmaAndPosMatcher.entails(text, hypothesis)), v);
+		//System.out.println(GramCalculator.getNrOfGramMatches(text, hypothesis, 2));
+		encoder6.addToVector(String.valueOf(GramCalculator.getNrOfGramMatches(text, hypothesis, 2)), v);
 		wve.addToVector(String.valueOf(PolarityCalculator.polarity(text, hypothesis)), v);
 		
 		return v;
