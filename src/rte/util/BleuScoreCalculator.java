@@ -7,7 +7,7 @@ import rte.pairs.Text;
 public class BleuScoreCalculator {
 
 	private int maxN;
-	private boolean mean;
+	public boolean mean;
 
 	public BleuScoreCalculator(int maxN_gramLength, boolean useArithmeticMean) {
 		maxN = maxN_gramLength;
