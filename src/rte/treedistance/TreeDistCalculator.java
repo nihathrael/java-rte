@@ -39,6 +39,8 @@ public class TreeDistCalculator {
 		krs2 = o2.keyRoots(l2, T2);
 
 		tree_dist = new double[T1.size()][T2.size()];
+		
+		
 	}
 
 	public double calculate() {
