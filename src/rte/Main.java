@@ -179,6 +179,9 @@ public class Main {
 			}
 		}
 		System.out.println("Done! Found best results for " + bestThres + " with score: " + bestScore);
+		
+		
+		
 		return bestScore;
 	}
 	
