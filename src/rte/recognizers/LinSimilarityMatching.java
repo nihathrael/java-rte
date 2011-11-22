@@ -11,6 +11,6 @@ public class LinSimilarityMatching extends BasicMatcher {
 
 	@Override
 	boolean match(SentenceNode hypoNode, SentenceNode textNode) {
-		return WordNetAccessor.getInstance().getLinSimilarity(hypoNode.lemma, textNode.lemma) > 0.5;
+		return WordNetAccessor.getInstance().getLinSimilarity(hypoNode.lemma, textNode.lemma) > 0.8;
 	}
 }

@@ -25,6 +25,8 @@ import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
 import rte.recognizers.LinSimilarityMatching;
 import rte.recognizers.MahoutMatcher;
+import rte.recognizers.MahoutSimpleMatcher;
+import rte.recognizers.SynonymMatching;
 import rte.recognizers.TreeDistMatcher;
 import rte.recognizers.WordNetDistanceMatching;
 import rte.treedistance.cost.FreeDeletion;
@@ -44,6 +46,7 @@ public class Main {
 
 	public Main() {
 		
+		// Load Wordnet!
 		WordNetAccessor.getInstance();
 		
 		System.out.println("Reading Pairs...");
@@ -56,52 +59,45 @@ public class Main {
 		lemmaIdfs = new LemmaIDFCalculator(pairs);
 		System.out.println("Done!");
 		
-		
-		EntailmentRecognizer rec12 = new LinSimilarityMatching();
-		findBestThreshold(pairs, rec12);
-		
 		crossValidate(pairs);
 
-		EntailmentRecognizer rec10 = new WordNetDistanceMatching();
-		findBestThreshold(pairs, rec10);
+		ArrayList<EntailmentRecognizer> recognizers = new ArrayList<EntailmentRecognizer>();
+
+		// Basic stuff
+		recognizers.add(new LexicalMatching());
+		recognizers.add(new LemmaMatching());
+		recognizers.add(new LemmaAndPosMatching());
+		recognizers.add(new IDFLexicalMatching(wordIdfs));
+		recognizers.add(new IDFLemmaMatching(lemmaIdfs));
 		
+		// TreeDistance
 		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
-		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
-		findBestThreshold(pairs, rec9);
+		recognizers.add(new TreeDistMatcher(costFunction3));
 		
 		TreeEditCost costFunction2 = new WeightedIDF(wordIdfs);
-		EntailmentRecognizer rec8 = new TreeDistMatcher(costFunction2);
-		findBestThreshold(pairs, rec8);
+		recognizers.add(new TreeDistMatcher(costFunction2));
 		
 		TreeEditCost costFunction1 = new FreeDeletion();
-		EntailmentRecognizer rec7 = new TreeDistMatcher(costFunction1);
-		findBestThreshold(pairs, rec7);
+		recognizers.add(new TreeDistMatcher(costFunction1));
 		
-		EntailmentRecognizer rec1 = new LexicalMatching();
-		findBestThreshold(pairs, rec1);
-		
-		EntailmentRecognizer rec2 = new LemmaMatching();
-		findBestThreshold(pairs, rec2);
-		
-		EntailmentRecognizer rec3 = new LemmaAndPosMatching();
-		findBestThreshold(pairs, rec3);
-		
-		EntailmentRecognizer rec4 = new IDFLexicalMatching(wordIdfs);
-		findBestThreshold(pairs, rec4);
-		
-		EntailmentRecognizer rec5 = new IDFLemmaMatching(lemmaIdfs);
-		findBestThreshold(pairs, rec5);
-		
-		
+		// Bleu Score
 		for(int i=2; i<5; i++) {
-			EntailmentRecognizer rec6 = new BleuScoreMatching(i, true);
-			findBestThreshold(pairs, rec6);
+			recognizers.add(new BleuScoreMatching(i, true));
 		}
 		for(int i=2; i<5; i++) {
-			EntailmentRecognizer rec6 = new BleuScoreMatching(i, false);
-			findBestThreshold(pairs, rec6);
+			recognizers.add(new BleuScoreMatching(i, false));
 		}
 		
+		// WordNet Magic
+		recognizers.add(new WordNetDistanceMatching());
+		recognizers.add(new LinSimilarityMatching());
+		recognizers.add(new SynonymMatching());
+		
+		
+		// Run them all!
+		for(EntailmentRecognizer recog: recognizers) {
+			findBestThreshold(pairs, recog);
+		}
 		
 		
 	}
@@ -146,7 +142,7 @@ public class Main {
 			}
 			
 			TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
-			MahoutMatcher mlearing = new MahoutMatcher(costFunction3, learningData, lemmaIdfs);
+			EntailmentRecognizer mlearing = new MahoutMatcher(costFunction3, learningData, lemmaIdfs);
 			double best = findBestThreshold(testData, mlearing);
 			
 			avgScore += best;
@@ -164,6 +160,7 @@ public class Main {
 
 	private double findBestThreshold(ArrayList<AdvPair> pairs, EntailmentRecognizer recognizer) {
 		System.out.println("Searching for best threshold using " + recognizer.getName() + "...");
+		long t = System.currentTimeMillis();
 		double bestScore = 0.0;
 		double bestThres = 0.05;
 		
@@ -188,9 +185,7 @@ public class Main {
 			}
 		}
 		writeScores(scores, "results/" + recognizer.getName().toLowerCase(), bestThres);
-		System.out.println("Done! Found best results for " + bestThres + " with score: " + bestScore);
-		
-		
+		System.out.println("Done ("+(System.currentTimeMillis() - t)+"ms)! Found best results for " + bestThres + " with score: " + bestScore);
 		
 		return bestScore;
 	}
