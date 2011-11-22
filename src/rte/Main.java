@@ -31,6 +31,7 @@ import rte.treedistance.cost.WeightedIDF;
 import rte.treedistance.cost.WeightedLemmaIDF;
 import rte.util.LemmaIDFCalculator;
 import rte.util.WordIDFCalculator;
+import rte.util.WordNetAccessor;
 
 public class Main {
 	
@@ -40,6 +41,8 @@ public class Main {
 	HashMap<Integer, Boolean> scoreMapping = new HashMap<Integer, Boolean>();
 
 	public Main() {
+		
+		WordNetAccessor.getInstance();
 		
 		System.out.println("Reading Pairs...");
 		ArrayList<AdvPair> pairs = readAdvancedPairs();

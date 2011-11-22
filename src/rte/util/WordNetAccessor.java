@@ -1,7 +1,9 @@
 package rte.util;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
 
 import jsl.measure.jwi.JiangConrathSimilarity;
 import edu.mit.jwi.Dictionary;
@@ -15,12 +17,15 @@ public class WordNetAccessor {
 	private JiangConrathSimilarity jiangConrathSimilarity;
 
 	private WordNetAccessor() {
-		// construct the URL to the Wordnet dictionary directory
-		String path = "/usr/share/wordnet/dict/";
 		try {
-			URL url = new URL("file", null, path);
+			Properties prop = new Properties();
+			// load a properties file
+			prop.load(new FileInputStream("config.properties"));
+			
+			String wordNetPath = prop.getProperty("wordnet.path");
 			// construct the dictionary object and open it
-			System.out.println("Loading WordNet dictionary...");
+			System.out.println("Loading WordNet dictionary from: " + wordNetPath);
+			URL url = new URL("file", null, wordNetPath);
 			long t = System.currentTimeMillis();
 			this.dict = new Dictionary(url);
 			dict.open();
@@ -40,7 +45,7 @@ public class WordNetAccessor {
 		}
 		return WordNetAccessor.instance;
 	}
-	
+
 	public double getJiangConrathSimilarity(String w1, String w2) {
 		return jiangConrathSimilarity.calculateSimilarity(w1, w2);
 	}
