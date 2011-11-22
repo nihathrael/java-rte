@@ -24,10 +24,11 @@ public class WordNetAccessor {
 			Properties prop = new Properties();
 			// load a properties file
 			prop.load(new FileInputStream("config.properties"));
-			
+
 			String wordNetPath = prop.getProperty("wordnet.path");
 			// construct the dictionary object and open it
-			System.out.println("Loading WordNet dictionary from: " + wordNetPath);
+			System.out.println("Loading WordNet dictionary from: "
+					+ wordNetPath);
 			URL url = new URL("file", null, wordNetPath);
 			long t = System.currentTimeMillis();
 			this.dict = new Dictionary(url);
@@ -51,11 +52,19 @@ public class WordNetAccessor {
 	}
 
 	public double getJiangConrathSimilarity(String w1, String w2) {
-		return jiangConrathSimilarity.calculateSimilarity(w1, w2);
+		try {
+			return jiangConrathSimilarity.calculateSimilarity(w1, w2);
+		} catch (IllegalArgumentException argumentException) {
+			return 0.0;
+		}
 	}
-	
+
 	public double getLinSimilarity(String w1, String w2) {
-		return linSimilarity.calculateSimilarity(w1, w2);
+		try {
+			return linSimilarity.calculateSimilarity(w1, w2);
+		} catch (IllegalArgumentException argumentException) {
+			return 0.0;
+		}
 	}
 
 }
