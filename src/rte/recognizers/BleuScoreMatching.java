@@ -1,7 +1,5 @@
 package rte.recognizers;
 
-import java.util.ArrayList;
-
 import rte.pairs.Text;
 import rte.util.BleuScoreCalculator;
 
