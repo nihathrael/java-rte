@@ -73,7 +73,7 @@ public class BleuScoreCalculator {
 		return result;
 	}
 
-	private ArrayList<String> calcN_grams(ArrayList<String> words, int n) {
+	public static ArrayList<String> calcN_grams(ArrayList<String> words, int n) {
 		ArrayList<String> result = new ArrayList<String>();
 		for (int i = 0; i <= words.size() - n; i++) {
 			StringBuilder gram = new StringBuilder();

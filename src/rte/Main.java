@@ -180,6 +180,9 @@ public class Main {
 		}
 		writeScores(scores, "results/" + recognizer.getName().toLowerCase(), bestThres);
 		System.out.println("Done! Found best results for " + bestThres + " with score: " + bestScore);
+		
+		
+		
 		return bestScore;
 	}
 	
