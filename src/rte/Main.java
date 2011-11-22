@@ -25,6 +25,7 @@ import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
 import rte.recognizers.MahoutMatcher;
 import rte.recognizers.TreeDistMatcher;
+import rte.recognizers.WordNetDistanceMatching;
 import rte.treedistance.cost.FreeDeletion;
 import rte.treedistance.cost.TreeEditCost;
 import rte.treedistance.cost.WeightedIDF;
@@ -58,6 +59,9 @@ public class Main {
 		
 		
 		crossValidate(pairs);
+
+		EntailmentRecognizer rec10 = new WordNetDistanceMatching();
+		findBestThreshold(pairs, rec10);
 		
 		TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
 		EntailmentRecognizer rec9 = new TreeDistMatcher(costFunction3);
