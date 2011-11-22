@@ -67,24 +67,14 @@ public class BleuScoreCalculator {
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
 		for (int n = n_from; n <= n_to; n++) {
-			result.add(calcN_grams(words, n));
+			result.add(GramCalculator.calcN_grams(words, n));
 		}
 
 		return result;
 	}
 
-	public static ArrayList<String> calcN_grams(ArrayList<String> words, int n) {
-		ArrayList<String> result = new ArrayList<String>();
-		for (int i = 0; i <= words.size() - n; i++) {
-			StringBuilder gram = new StringBuilder();
-			for (int j = 0; j < n; j++) {
-				gram.append(words.get(i + j));
-				gram.append(" ");
-			}
 
-			result.add(gram.toString().trim());
-		}
-		return result;
-	}
+	
+	
 
 }
