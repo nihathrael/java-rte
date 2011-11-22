@@ -36,6 +36,7 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 			}
 		}
 		
+		
 		/*
 		System.out.println("Best matching Sentences with Distance: " + minDistance);
 		System.out.println("Hypothesis: " + bestmatchSentenceH.toString());
@@ -43,9 +44,11 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 		System.out.println();
 		*/
 		
-		double value = 1.0 / (1.0+minDistance);
+		//double value = 1.0 / (1.0+minDistance);
 		//System.out.println(value);
 		//minDistance = Math.pow(minDistance, 2.0);
+		
+		
 		return 1-minDistance*10;
 	}
 
