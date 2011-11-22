@@ -26,6 +26,7 @@ public class MahoutMatcher implements EntailmentRecognizer {
 	private ContinuousValueEncoder encoder4;
 	private ContinuousValueEncoder encoder5;
 	private ContinuousValueEncoder encoder6;
+	private ContinuousValueEncoder encoder7;
 
 	int FEATURES = 100;
 	private TreeDistMatcher treeDistMatcher;
@@ -51,6 +52,8 @@ public class MahoutMatcher implements EntailmentRecognizer {
 		encoder4 = new ContinuousValueEncoder("Lemma");
 		encoder5 = new ContinuousValueEncoder("LemmaAndPos");
 		encoder6 = new ContinuousValueEncoder("Bigram-Matches");
+		encoder7 = new ContinuousValueEncoder("JiangConrathSimilarity");
+		
 
 		learningAlgorithm = new OnlineLogisticRegression(2, FEATURES, new L1());
 
@@ -75,6 +78,7 @@ public class MahoutMatcher implements EntailmentRecognizer {
 		encoder5.addToVector(String.valueOf(lemmaAndPosMatcher.entails(text, hypothesis)), v);
 		//System.out.println(GramCalculator.getNrOfGramMatches(text, hypothesis, 2));
 		encoder6.addToVector(String.valueOf(GramCalculator.getNrOfGramMatches(text, hypothesis, 2)), v);
+		
 		wve.addToVector(String.valueOf(PolarityCalculator.polarity(text, hypothesis)), v);
 		
 		return v;

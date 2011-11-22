@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Properties;
 
 import jsl.measure.jwi.JiangConrathSimilarity;
+import jsl.measure.jwi.LinSimilarity;
 import edu.mit.jwi.Dictionary;
 
 public class WordNetAccessor {
@@ -15,6 +16,8 @@ public class WordNetAccessor {
 	private Dictionary dict;
 
 	private JiangConrathSimilarity jiangConrathSimilarity;
+
+	private LinSimilarity linSimilarity;
 
 	private WordNetAccessor() {
 		try {
@@ -30,6 +33,7 @@ public class WordNetAccessor {
 			this.dict = new Dictionary(url);
 			dict.open();
 			jiangConrathSimilarity = new JiangConrathSimilarity(dict);
+			linSimilarity = new LinSimilarity(dict);
 			System.out.printf("Done (%1d msec ) \n ",
 					System.currentTimeMillis() - t);
 		} catch (IOException e) {
@@ -48,6 +52,10 @@ public class WordNetAccessor {
 
 	public double getJiangConrathSimilarity(String w1, String w2) {
 		return jiangConrathSimilarity.calculateSimilarity(w1, w2);
+	}
+	
+	public double getLinSimilarity(String w1, String w2) {
+		return linSimilarity.calculateSimilarity(w1, w2);
 	}
 
 }
