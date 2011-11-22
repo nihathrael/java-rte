@@ -23,27 +23,35 @@ public class MahoutMatcher implements EntailmentRecognizer {
 	private ContinuousValueEncoder encoder2;
 	private ContinuousValueEncoder encoder3;
 
-	int FEATURES = 10;
+	int FEATURES = 100;
 	private TreeDistMatcher treeDistMatcher;
 	private BleuScoreMatching bleuScoreMatching;
 	private IDFLemmaMatching idfLemmaMatcher;
 	private OnlineLogisticRegression learningAlgorithm;
 	private WordValueEncoder wve;
+	private LemmaMatching lemmaMatcher;
+	private ContinuousValueEncoder encoder4;
+	private ContinuousValueEncoder encoder5;
+	private LemmaAndPosMatching lemmaAndPosMatcher;
 
-	public MahoutMatcher(TreeEditCost costFunction, ArrayList<AdvPair> trainingData, LemmaIDFCalculator idfCalc) {
+	public MahoutMatcher(TreeEditCost costFunction,
+			ArrayList<AdvPair> trainingData, LemmaIDFCalculator idfCalc) {
 		treeDistMatcher = new TreeDistMatcher(costFunction);
 		bleuScoreMatching = new BleuScoreMatching(2, false);
 		idfLemmaMatcher = new IDFLemmaMatching(idfCalc);
+		lemmaMatcher = new LemmaMatching();
+		lemmaAndPosMatcher = new LemmaAndPosMatching();
 		wve = new StaticWordValueEncoder("polarity");
 		encoder = new ContinuousValueEncoder("TreeDist");
 		encoder2 = new ContinuousValueEncoder("BleuScore");
 		encoder3 = new ContinuousValueEncoder("IDFLemma");
+		encoder4 = new ContinuousValueEncoder("Lemma");
+		encoder5 = new ContinuousValueEncoder("LemmaAndPos");
 		
 
-		learningAlgorithm = new OnlineLogisticRegression(
-				2, FEATURES, new L1());
+		learningAlgorithm = new OnlineLogisticRegression(2, FEATURES, new L1());
 
-		for (AdvPair pair: trainingData) {
+		for (AdvPair pair : trainingData) {
 			Vector v = encodeVector(pair.text, pair.hypothesis);
 			int entails = 0;
 			if (pair.entailment) {
@@ -57,11 +65,13 @@ public class MahoutMatcher implements EntailmentRecognizer {
 	private Vector encodeVector(Text text, Text hypothesis) {
 		Vector v = new RandomAccessSparseVector(FEATURES);
 		// Add Tree Dist
-		encoder.addToVector(
-				String.valueOf(treeDistMatcher.entails(text, hypothesis)), v);
+		encoder.addToVector(String.valueOf(treeDistMatcher.entails(text, hypothesis)), v);
 		encoder2.addToVector(String.valueOf(bleuScoreMatching.entails(text, hypothesis)), v);
 		encoder3.addToVector(String.valueOf(idfLemmaMatcher.entails(text, hypothesis)), v);
+		encoder4.addToVector(String.valueOf(lemmaMatcher.entails(text, hypothesis)), v);
+		encoder5.addToVector(String.valueOf(lemmaAndPosMatcher.entails(text, hypothesis)), v);
 		wve.addToVector(String.valueOf(PolarityCalculator.polarity(text, hypothesis)), v);
+		
 		return v;
 	}
 
