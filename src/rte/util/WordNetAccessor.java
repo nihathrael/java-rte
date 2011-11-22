@@ -8,6 +8,7 @@ import java.util.Properties;
 import jsl.measure.jwi.JiangConrathSimilarity;
 import jsl.measure.jwi.LinSimilarity;
 import edu.mit.jwi.Dictionary;
+import edu.mit.jwi.RAMDictionary;
 
 public class WordNetAccessor {
 

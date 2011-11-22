@@ -23,6 +23,7 @@ import rte.recognizers.IDFLexicalMatching;
 import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
+import rte.recognizers.LinSimilarityMatching;
 import rte.recognizers.MahoutMatcher;
 import rte.recognizers.TreeDistMatcher;
 import rte.treedistance.cost.FreeDeletion;
@@ -55,7 +56,8 @@ public class Main {
 		System.out.println("Done!");
 		
 		
-		
+		EntailmentRecognizer rec12 = new LinSimilarityMatching();
+		findBestThreshold(pairs, rec12);
 		
 		crossValidate(pairs);
 		
