@@ -2,7 +2,7 @@ package rte.recognizers;
 
 import rte.pairs.Text;
 
-public interface EntailmentRecognizer {
+public interface IEntailmentRecognizer {
 	
 	public double entails(Text text, Text hypothesis);
 	

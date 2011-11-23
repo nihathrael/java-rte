@@ -6,7 +6,7 @@ import rte.pairs.SentenceNode;
 import rte.pairs.Text;
 import rte.util.PolarityCalculator;
 
-public abstract class BasicMatcher implements EntailmentRecognizer {
+public abstract class BasicMatcher implements IEntailmentRecognizer {
 
 
 	public double entails(Text text, Text hypothesis) {

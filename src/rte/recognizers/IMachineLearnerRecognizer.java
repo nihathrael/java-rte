@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import rte.pairs.THPair;
 
-public interface IMachineLearnerRecognizer extends EntailmentRecognizer {
+public interface IMachineLearnerRecognizer extends IEntailmentRecognizer {
 
 	/**
 	 * Initialize the machine learner with the set of training data. Calling this

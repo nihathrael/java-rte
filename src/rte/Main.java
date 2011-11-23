@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 import rte.pairs.THPair;
 import rte.recognizers.BasicMahoutMatcher;
 import rte.recognizers.BleuScoreMatching;
-import rte.recognizers.EntailmentRecognizer;
+import rte.recognizers.IEntailmentRecognizer;
 import rte.recognizers.IDFLemmaMatching;
 import rte.recognizers.IDFLexicalMatching;
 import rte.recognizers.IMachineLearnerRecognizer;
@@ -64,7 +64,7 @@ public class Main {
 		System.out.println("Part 1&2 - Basic Recognizers");
 		System.out.println("****************************");
 
-		ArrayList<EntailmentRecognizer> recognizers = new ArrayList<EntailmentRecognizer>();
+		ArrayList<IEntailmentRecognizer> recognizers = new ArrayList<IEntailmentRecognizer>();
 
 		// Basic stuff
 		recognizers.add(new LexicalMatching());
@@ -97,7 +97,7 @@ public class Main {
 		recognizers.add(new SynonymMatching());
 
 		// Run them all!
-		for (EntailmentRecognizer recog : recognizers) {
+		for (IEntailmentRecognizer recog : recognizers) {
 			findBestThreshold(pairs, recog);
 		}
 
@@ -201,7 +201,7 @@ public class Main {
 	 * 
 	 * @return The best achieved score
 	 */
-	private double findBestThreshold(ArrayList<THPair> pairs, EntailmentRecognizer recognizer) {
+	private double findBestThreshold(ArrayList<THPair> pairs, IEntailmentRecognizer recognizer) {
 		System.out.println("Find best threshold for: \"" + recognizer.getName() + "\" ... ");
 		long t = System.currentTimeMillis();
 		double bestScore = 0.0;
@@ -256,11 +256,11 @@ public class Main {
 	}
 
 	/**
-	 * Analyze the pairs using the given {@link EntailmentRecognizer}.
+	 * Analyze the pairs using the given {@link IEntailmentRecognizer}.
 	 * 
 	 * @return Returns a List of scores resulting from the analysis
 	 */
-	private ArrayList<Score> analyzePairs(ArrayList<THPair> pairs, EntailmentRecognizer recognizer) {
+	private ArrayList<Score> analyzePairs(ArrayList<THPair> pairs, IEntailmentRecognizer recognizer) {
 
 		ArrayList<Score> scores = new ArrayList<Score>();
 		for (THPair pair : pairs) {

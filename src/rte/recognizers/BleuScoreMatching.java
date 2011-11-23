@@ -3,7 +3,7 @@ package rte.recognizers;
 import rte.pairs.Text;
 import rte.util.BleuScoreCalculator;
 
-public class BleuScoreMatching implements EntailmentRecognizer {
+public class BleuScoreMatching implements IEntailmentRecognizer {
 
 	BleuScoreCalculator bsc;
 	
