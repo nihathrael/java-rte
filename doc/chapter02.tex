@@ -50,3 +50,27 @@ similarity is bigger than 0.8. This value was found by trying different values.
 
 The \textit{SynonymMatching} is also a \textit{BasicMatcher} that checks whether two graph nodes have a overlap in synonyms
 with 1 graph level depth.
+
+\subsection{Where our system faild}
+One example where our system failed was:
+\begin{quote}
+<t>In Nigeria, by far the most populous country in sub-Saharan Africa, over 2.7 million people are infected with HIV.</t>
+
+<h>2.7 percent of the people infected with HIV live in Africa.</h>
+\end{quote}
+We assume this happenend because there are many words in the hypothesis that also occur in the text, this giving a good
+lemma match for example. Polarity also matches, thus this is of no help. We do not see how our measurements could have
+detected this as not being an entailment.
+
+
+Another example:
+\begin{quote}
+<t>Rockweed has been harvested commercially in Nova Scotia since the late 1950's and is currently the most important commercial seaweed in Atlantic Canada.</t>
+
+<h>Marine vegetation is  harvested.</h>
+\end{quote}
+Here the first two words of the hypothesis care not found in the text, thus leading to e.g. a very bad lemma matching. A
+deeper synonyms analysis might help in this case. Other WordNet methodes like word stem could be useful as well.
+
+
+
