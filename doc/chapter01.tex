@@ -38,7 +38,8 @@ abstract function.
 Considering that this kind of analysis ignores most of the semantics the results are quite
 impressive. These quite simple implementations still give better results than some 
 pretty complicated techniques. Combined with the check for equal polarity, 
-\textit{Lemma matching} gives the third best results of all.
+\textit{Lemma matching} gives the third best results of all. We implemented IDF weighting,
+using the whole dataset to calculate the word quotes, but it did not improve our results.
 
 \paragraph{BLEU algorithm}
 The \textit{BLEU} algorithm, uses n-grams largely, so we implemented the functionality to
@@ -53,9 +54,24 @@ Surprisingly the test which used a maximum n of 2, which degenerates the algorit
 bigram matcher worked best with a result of 61.875\%.
 
 \subsection{Systems in part 2}
+Our implementations for the Tree Edit Distance algorithm by Zhang \& Shasha offer using
+a replaceable cost function. Thus we can implement new cost functions easily and compare
+the results. To verify the correctness of our implementation we use a JUnit testcase that
+contains an example presented in the lecture.
 
-- cost functions
-- test case
+\subsubsection{Entailment judgement}
+
+To judge the entailment we take every sentence from the text and calculate its distance from 
+the hypothesis. The best score will be used to judge the entailment. The reasoning behind this
+is that the sentence from the text with the smallest distance $d$ to the hypothesis supports it.
+With this result we tried to add 1 and invert it: $v=1/(1+d)$. Then the result is one, when
+the distance is zero, which indicates very similar sentences. However the results when we just
+returned $1-d*10$.
+
+\subsubsection{IDF insertion cost}
+We have the functionality to add new cost functions easily and calculated IDF already for the prior
+task. So we changed the edit cost values in the algorithm to floating point numbers and implemented 
+a cost function that returns the words IDF value for insertion, which improved the performance by about 5\%.
 
 \subsection{Systems in part 3}
 For part 3 we implemented a learning algorithm provided by the Mahout\footnote{Mahout website:
