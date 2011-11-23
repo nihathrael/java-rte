@@ -29,7 +29,34 @@ Thus we are able to create new systems of this category by implementing only one
 that chooses or calculates the desired property.
 
 \subsection{Systems in part 1}
+
+With the help of our \textit{BasicMatcher} class it was fairly easy to create most systems
+of part 1. For each of\textit{Word, Lemma and Part of Speech matching} we could use the 
+\textit{BasicMatcher} and extract and compare the particular part, by implementing the
+abstract function.
+
+Considering that this kind of analysis ignores most of the semantics the results are quite
+impressive. These quite simple implementations still give better results than some 
+pretty complicated techniques. Combined with the check for equal polarity, 
+\textit{Lemma matching} gives the third best results of all.
+
+\paragraph{BLEU algorithm}
+The \textit{BLEU} algorithm, uses n-grams largely, so we implemented the functionality to
+calculate them in a seperate class to be able to use it for different purposes.
+The \textit{BLEU} algorithm, determines the number of shared n-grams and weights them
+according to the length. The descrption suggests to use 4 as maximum for n and to weigh
+the grams of different length by using the arithmetic mean. In our implementation we leave
+the maximum n as parameter and add an alternative weighing technique. By this we can use
+try different setups to figure out which works best. 
+
+Surprisingly the test which used a maximum n of 2, which degenerates the algorithm to a
+bigram matcher worked best with a result of 61.875\%.
+
 \subsection{Systems in part 2}
+
+- cost functions
+- test case
+
 \subsection{Systems in part 3}
 For part 3 we implemented a learning algorithm provided by the Mahout\footnote{Mahout website:
 \url{http://mahout.apache.org/}} library. Mahout is a powerful and scalable machine learning library, providing
