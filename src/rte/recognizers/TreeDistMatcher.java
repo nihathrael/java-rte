@@ -6,7 +6,7 @@ import rte.pairs.Text;
 import rte.treedistance.TreeDistCalculator;
 import rte.treedistance.cost.TreeEditCost;
 
-public class TreeDistMatcher implements EntailmentRecognizer {
+public class TreeDistMatcher implements IEntailmentRecognizer {
 	
 	TreeEditCost cost; 
 	
@@ -54,7 +54,7 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 
 	public String getName() {
 		return TreeDistMatcher.class.getSimpleName() + 
-				" with cost function: " + cost.getClass().getSimpleName();
+				" with costs " + cost.getClass().getSimpleName();
 	}
 
 }

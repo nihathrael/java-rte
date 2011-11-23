@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import rte.pairs.AdvPair;
+import rte.pairs.THPair;
 import rte.pairs.Relation;
 import rte.pairs.Sentence;
 import rte.pairs.SentenceNode;
@@ -97,11 +97,11 @@ public class TreeDistCalculatorTest {
 		Text hypothesis = new Text();
 		hypothesis.sentences.add(t2);
 		
-		AdvPair pair = new AdvPair();
+		THPair pair = new THPair();
 		pair.text = text;
 		pair.hypothesis = hypothesis;
 		
-		ArrayList<AdvPair> pairs = new ArrayList<AdvPair>();
+		ArrayList<THPair> pairs = new ArrayList<THPair>();
 		pairs.add(pair);
 		
 		WordIDFCalculator idfs = new WordIDFCalculator(pairs);

@@ -2,12 +2,12 @@ package rte.util;
 
 import java.util.ArrayList;
 
-import rte.pairs.AdvPair;
+import rte.pairs.THPair;
 import rte.pairs.SentenceNode;
 
 public class LemmaIDFCalculator extends IDFCalculator {
 	
-	public LemmaIDFCalculator(ArrayList<AdvPair> pairs) {
+	public LemmaIDFCalculator(ArrayList<THPair> pairs) {
 		super(pairs);
 	}
 

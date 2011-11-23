@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import rte.pairs.Text;
 import rte.util.WordNetAccessor;
 
-public class WordNetDistanceMatching implements EntailmentRecognizer {
+public class WordNetDistanceMatching implements IEntailmentRecognizer {
 
 	WordNetAccessor wnet = WordNetAccessor.getInstance();
 

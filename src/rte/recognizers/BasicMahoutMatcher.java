@@ -13,10 +13,10 @@ import org.apache.mahout.vectorizer.encoders.WordValueEncoder;
 import rte.pairs.THPair;
 import rte.pairs.Text;
 import rte.treedistance.cost.TreeEditCost;
+import rte.util.GramCalculator;
 import rte.util.LemmaIDFCalculator;
-import rte.util.PolarityCalculator;
 
-public class MahoutMatcher implements IMachineLearnerRecognizer {
+public class BasicMahoutMatcher implements IMachineLearnerRecognizer {
 
 	private ContinuousValueEncoder encoder1;
 	private ContinuousValueEncoder encoder2;
@@ -38,7 +38,7 @@ public class MahoutMatcher implements IMachineLearnerRecognizer {
 	private SynonymMatching synonymMatching;
 	private ContinuousValueEncoder encoder8;
 
-	public MahoutMatcher(TreeEditCost costFunction, LemmaIDFCalculator idfCalc) {
+	public BasicMahoutMatcher(TreeEditCost costFunction, LemmaIDFCalculator idfCalc) {
 		treeDistMatcher = new TreeDistMatcher(costFunction);
 		bleuScoreMatching = new BleuScoreMatching(2, false);
 		idfLemmaMatcher = new IDFLemmaMatching(idfCalc);
@@ -55,7 +55,27 @@ public class MahoutMatcher implements IMachineLearnerRecognizer {
 		encoder7 = new ContinuousValueEncoder("LinSimilarity");
 		encoder8 = new ContinuousValueEncoder("Synonyms");
 	}
-	
+
+	private Vector encodeVector(Text text, Text hypothesis) {
+		Vector v = new RandomAccessSparseVector(FEATURES);
+		// Add Tree Dist
+		encoder2.addToVector(String.valueOf(bleuScoreMatching.entails(text, hypothesis)), v);
+		encoder1.addToVector(String.valueOf(GramCalculator.getNrOfGramMatches(hypothesis, hypothesis, 2)), v);
+		encoder3.addToVector(String.valueOf(idfLemmaMatcher.entails(text, hypothesis)), v);
+		encoder4.addToVector(String.valueOf(lemmaMatcher.entails(text, hypothesis)), v);
+		encoder5.addToVector(String.valueOf(lemmaAndPosMatcher.entails(text, hypothesis)), v);
+		return v;
+	}
+
+	public double entails(Text text, Text hypothesis) {
+		Vector v = encodeVector(text, hypothesis);
+		return learningAlgorithm.classifyScalar(v);
+	}
+
+	public String getName() {
+		return BasicMahoutMatcher.class.getSimpleName();
+	}
+
 	public void init(ArrayList<THPair> trainingData) {
 		learningAlgorithm = new OnlineLogisticRegression(2, FEATURES, new L1());
 
@@ -67,30 +87,5 @@ public class MahoutMatcher implements IMachineLearnerRecognizer {
 			}
 			learningAlgorithm.train(entails, v);
 		}
-	}
-
-	private Vector encodeVector(Text text, Text hypothesis) {
-		Vector v = new RandomAccessSparseVector(FEATURES);
-		// Add Tree Dist
-		//encoder1.addToVector(String.valueOf(treeDistMatcher.entails(text, hypothesis)), v);
-		encoder2.addToVector(String.valueOf(bleuScoreMatching.entails(text, hypothesis)), v);
-		encoder3.addToVector(String.valueOf(idfLemmaMatcher.entails(text, hypothesis)), v);
-		encoder4.addToVector(String.valueOf(lemmaMatcher.entails(text, hypothesis)), v);
-		encoder5.addToVector(String.valueOf(lemmaAndPosMatcher.entails(text, hypothesis)), v);
-		//encoder7.addToVector(String.valueOf(linSimMatching.entails(text, hypothesis)), v);
-		wve.addToVector(String.valueOf(PolarityCalculator.polarity(text, hypothesis)), v);
-		encoder8.addToVector(String.valueOf(synonymMatching.entails(text, hypothesis)), v);
-		
-		
-		return v;
-	}
-
-	public double entails(Text text, Text hypothesis) {
-		Vector v = encodeVector(text, hypothesis);
-		return learningAlgorithm.classifyScalar(v);
-	}
-
-	public String getName() {
-		return MahoutMatcher.class.getSimpleName();
 	}
 }

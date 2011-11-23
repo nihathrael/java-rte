@@ -3,7 +3,7 @@ package rte.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import rte.pairs.AdvPair;
+import rte.pairs.THPair;
 import rte.pairs.SentenceNode;
 import rte.pairs.Text;
 
@@ -12,11 +12,8 @@ public abstract class IDFCalculator {
 	HashMap<String, Integer> map = new HashMap<String, Integer>();
 	
 	
-	public IDFCalculator(ArrayList<AdvPair> pairs) {
-		for(AdvPair pair: pairs) {
-			countWords(pair.text);
-			countWords(pair.hypothesis);
-		}
+	public IDFCalculator(ArrayList<THPair> pairs) {
+		addPairs(pairs);
 	}
 
 	private void countWords(Text text) {
@@ -36,6 +33,13 @@ public abstract class IDFCalculator {
 	
 	public double getValueFor(String word) {
 		return 1.0/map.get(word);
+	}
+	
+	public void addPairs(ArrayList<THPair> pairs) {
+		for(THPair pair: pairs) {
+			countWords(pair.text);
+			countWords(pair.hypothesis);
+		}
 	}
 
 }

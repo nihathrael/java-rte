@@ -6,7 +6,7 @@ import rte.pairs.SentenceNode;
 import rte.pairs.Text;
 import rte.util.IDFCalculator;
 
-public abstract class BasicIDFMatcher implements EntailmentRecognizer {
+public abstract class BasicIDFMatcher implements IEntailmentRecognizer {
 
 	private final IDFCalculator idfCalculator;
 

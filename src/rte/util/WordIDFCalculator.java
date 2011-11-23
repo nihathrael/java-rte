@@ -2,12 +2,12 @@ package rte.util;
 
 import java.util.ArrayList;
 
-import rte.pairs.AdvPair;
+import rte.pairs.THPair;
 import rte.pairs.SentenceNode;
 
 public class WordIDFCalculator extends IDFCalculator {
 	
-	public WordIDFCalculator(ArrayList<AdvPair> pairs) {
+	public WordIDFCalculator(ArrayList<THPair> pairs) {
 		super(pairs);
 	}
 
