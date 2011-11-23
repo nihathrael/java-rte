@@ -13,10 +13,7 @@ public abstract class IDFCalculator {
 	
 	
 	public IDFCalculator(ArrayList<AdvPair> pairs) {
-		for(AdvPair pair: pairs) {
-			countWords(pair.text);
-			countWords(pair.hypothesis);
-		}
+		addPairs(pairs);
 	}
 
 	private void countWords(Text text) {
@@ -36,6 +33,13 @@ public abstract class IDFCalculator {
 	
 	public double getValueFor(String word) {
 		return 1.0/map.get(word);
+	}
+	
+	public void addPairs(ArrayList<AdvPair> pairs) {
+		for(AdvPair pair: pairs) {
+			countWords(pair.text);
+			countWords(pair.hypothesis);
+		}
 	}
 
 }

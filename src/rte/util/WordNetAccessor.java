@@ -40,6 +40,7 @@ public class WordNetAccessor {
 			URL url = new URL("file", null, wordNetPath);
 			long t = System.currentTimeMillis();
 			this.dict = new RamDictWrapper(url);
+			//this.dict = new Dictionary(url);
 			dict.open();
 			jiangConrathSimilarity = new JiangConrathSimilarity(dict);
 			linSimilarity = new LinSimilarity(dict);

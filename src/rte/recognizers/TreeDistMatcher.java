@@ -54,7 +54,7 @@ public class TreeDistMatcher implements EntailmentRecognizer {
 
 	public String getName() {
 		return TreeDistMatcher.class.getSimpleName() + 
-				" with cost function: " + cost.getClass().getSimpleName();
+				" with costs " + cost.getClass().getSimpleName();
 	}
 
 }

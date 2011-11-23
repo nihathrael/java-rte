@@ -18,9 +18,9 @@ public class BleuScoreMatching implements EntailmentRecognizer {
 	
 	public String getName() {
 		if(bsc.mean) {
-			return BleuScoreMatching.class.getSimpleName() + " with arithmetic mean, depth=" + bsc.getDepth();
+			return BleuScoreMatching.class.getSimpleName() + " depth " + bsc.getDepth() + " + arithmetic mean";
 		} else {
-			return BleuScoreMatching.class.getSimpleName() + " without arithmetic mean, depth=" + bsc.getDepth();
+			return BleuScoreMatching.class.getSimpleName() + " depth " + bsc.getDepth();
 		}
 	}	
 

@@ -37,7 +37,7 @@ public class RamDictWrapper extends Dictionary {
 	public RamDictWrapper(URL file) {
 		super(file);
 		internalDict = new CachingDictionary(new RAMDictionary(file,
-				RAMDictionary.IMMEDIATE_LOAD));
+				RAMDictionary.BACKGROUND_LOAD));
 	}
 
 	public IVersion getVersion() {
