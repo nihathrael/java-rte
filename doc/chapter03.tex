@@ -1,1 +1,37 @@
-Chapter 3
+
+\section{Results}
+
+- TreeDistMatcher combined with cost function
+
+\begin{center}
+\begin{tabular}{ | c | c | c | c | }
+	\hline
+	technique 				& parameters				& threshold 	& correct	\\ 
+	\hline
+	MahoutMatcher			& 10 fold cross-validation	& avg. 0.5225	& 65.625\%	\\
+							&							& [0.475-0.55]	& [57.5\%-75\%] \\
+	\hline
+	SynonymMatching			&							& 0.675			& 63.375\%	\\
+	LemmaMatching			&							& 0.675			& 63.25\%	\\
+	LemmaAndPosMatching 	&							& 0.625			& 62.875\%	\\	
+  	LexicalMatching			& 							& 0.575			& 62\%		\\
+	BleuScoreMatching		& depth=2					& 0.425			& 61.875\%	\\
+	IDFLexicalMatching		&							& 0.325			& 61.625\%	\\
+	IDFLemmaMatching		&							& 0.5			& 61.375\%	\\
+	BleuScoreMatching		& depth=4					& 0.5			& 61.25\%	\\	
+	BleuScoreMatching		& depth=3					& 0.425			& 61.125\%	\\	
+  	BleuScoreMatching		& arithm. mean, depth=2		& 0.075			& 60.875\%	\\	
+	LinSimilarityMatching	&							& 0.35			& 60.5\%	\\
+	WordNetDistanceMatching	& 							& 0.775			& 60.25\%	\\
+	TreeDistMatcher			& costs: WeightedLemma		& 0.725			& 57.125\%	\\
+	TreeDistMatcher			& costs: WeightedIDF		& 0.4			& 55.75\%	\\
+	BleuScoreMatching		& arithm. mean, depth=3		& 0.05			& 55.375\%	\\	
+	BleuScoreMatching		& arithm. mean, depth=4  	& 0.05			& 51.875\%	\\	
+	TreeDistMatcher			& costs: FreeDeletion		& 0.05			& 51.7\%	\\
+	\hline
+\end{tabular}
+\end{center}	
+
+
+- very low threshold on some
+- consider seperately because of cross validation
