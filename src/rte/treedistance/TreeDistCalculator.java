@@ -10,18 +10,18 @@ import rte.treedistance.cost.TreeEditCost;
 
 public class TreeDistCalculator {
 
-	ArrayList<SentenceNode> T1;
-	ArrayList<SentenceNode> T2;
+	private final ArrayList<SentenceNode> T1;
+	private final ArrayList<SentenceNode> T2;
 
-	int[] l1;
-	int[] l2;
+	private final int[] l1;
+	private final int[] l2;
 
-	ArrayList<Integer> krs1;
-	ArrayList<Integer> krs2;
+	private final ArrayList<Integer> krs1;
+	private final ArrayList<Integer> krs2;
 
-	double[][] tree_dist;
+	private final double[][] tree_dist;
 	
-	TreeEditCost cost;
+	private final TreeEditCost cost;
 	
 	private static Forest NULLFOREST = new Forest(-1, -1);
 
@@ -52,7 +52,7 @@ public class TreeDistCalculator {
 		return tree_dist[l1.length-1][l2.length-1];
 	}
 
-	public void calcDist(int i, int j) {
+	private void calcDist(int i, int j) {
 
 		// Autofilled with (null, null) = 0;
 		ForestDist fdist = new ForestDist();
@@ -85,18 +85,10 @@ public class TreeDistCalculator {
 				}
 			}
 		}
-		
-		
-
 	}
 
-	public double min(double a, double b, double c) {
-		double min = a;
-		if(b<min)
-			min = b;
-		if(c<min)
-			min = c;
-		return min;
+	private double min(double a, double b, double c) {
+		return Math.min(Math.min(a, b), c);
 	}
 	
 	private Forest forest(int i, int b) {

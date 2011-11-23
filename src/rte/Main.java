@@ -17,10 +17,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import rte.pairs.THPair;
+import rte.recognizers.BasicMahoutMatcher;
 import rte.recognizers.BleuScoreMatching;
 import rte.recognizers.EntailmentRecognizer;
 import rte.recognizers.IDFLemmaMatching;
 import rte.recognizers.IDFLexicalMatching;
+import rte.recognizers.IMachineLearnerRecognizer;
 import rte.recognizers.LemmaAndPosMatching;
 import rte.recognizers.LemmaMatching;
 import rte.recognizers.LexicalMatching;
@@ -105,7 +107,12 @@ public class Main {
 		System.out.println("\n**************************************************");
 		System.out.println("Part 3 - Machine Learning 10-Fold Cross-Validation");
 		System.out.println("**************************************************");
-		crossValidate(pairs);
+		
+		IMachineLearnerRecognizer matcher = new BasicMahoutMatcher(costFunction3, lemmaIdfs);
+		crossValidate(pairs, matcher);
+		
+		matcher = new MahoutMatcher(costFunction3, lemmaIdfs);
+		crossValidate(pairs, matcher);
 
 		//
 		// Part 4
@@ -123,7 +130,8 @@ public class Main {
 		System.out.println("Done!");
 
 		System.out.println("Learning Data...");
-		EntailmentRecognizer mlearning = new MahoutMatcher(costFunction3, pairs, lemmaIdfs);
+		IMachineLearnerRecognizer mlearning = new MahoutMatcher(costFunction3, lemmaIdfs);
+		mlearning.init(pairs);
 		System.out.println("Analyze Pairs...");
 		ArrayList<Score> scores = analyzePairs(testPairs, mlearning);
 		System.out.println("Write results....");
@@ -136,7 +144,7 @@ public class Main {
 	/**
 	 * Runs a ten-fold cross-validation using the mahout matcher
 	 */
-	public void crossValidate(ArrayList<THPair> pairs) {
+	public void crossValidate(ArrayList<THPair> pairs, IMachineLearnerRecognizer mlearner) {
 		/*
 		 * 10-fold Cross-Validation (CV) procedure: 1. divide data in 10
 		 * stratifed folds of approximately equal size 2. for i = 1 to 10 do: I
@@ -172,9 +180,8 @@ public class Main {
 			}
 
 			TreeEditCost costFunction3 = new WeightedLemmaIDF(lemmaIdfs);
-			EntailmentRecognizer mlearing = new MahoutMatcher(costFunction3, learningData,
-					lemmaIdfs);
-			double best = findBestThreshold(testData, mlearing);
+			mlearner.init(learningData);
+			double best = findBestThreshold(testData, mlearner);
 
 			avgScore += best;
 
