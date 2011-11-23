@@ -53,6 +53,8 @@ The resulting score is not very good, as no semantic information and almost no s
 \subsubsection{Evaluating the Machine Learner}
 We implemented a 10-fold cross-validation to verify if our changes to the features improved the matcher or made the
 results worse. The code for this can be found in the \textit{Main} class under the function name
-\textit{crossValidate(ArrayList<THPair> pairs, IMachineLearnerRecognizer mlearner)}.
+\textit{crossValidate(ArrayList<THPair> pairs, IMachineLearnerRecognizer mlearner)}. We also used the 10-fold cross
+validation to find the best threshold for the machine-learner results. The Mahout classifier returns probabilites for
+each category, therefore we needed to find out the best threshold here as well. We used the average of all 10 runs.
 
 

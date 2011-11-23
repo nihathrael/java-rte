@@ -24,8 +24,29 @@ version. Only 6 features were used:
 
 For all features for which we had matchers (all except Polarity) we used the matchers estimate whether a text/hypothesis
 pair was entailing or not as value, as this is already a convinient value between 0 and 1. All matchers except for
-BleuScore already contain the Polarity measurement already as a sort of "deatch" criteria, where we set the estimate to
+BleuScore already contain the Polarity measurement already as a sort of "death" criteria, where we set the estimate to
 0 if the polarity doesn't match. We still use it as seperate feature, by setting the value to 1 if it matches and 0 if
 it doesn't, this proved helpful (without polarity feature, the result was ~62.6\%).
 
+As we were not happy with the results we were able to achieve with our basic set of matchers, we decided to implement
+the WordNet library using JWI\footnote{JWI website:\url{http://projects.csail.mit.edu/jwi}} as access to WordNet and the
+JavaSimLibrary\footnote{JavaSimLibrary website: \url{http://pertomed.spim.jussieu.fr/~lma/jsl/}} to calculate distances
+on the WordNet graph. JavaSimLibrary provides implementations of the Lin and Jiang \& Conrath measures.
 
+We implemented three different matchers based on WordNet:
+\begin{itemize}
+    \item WordNetDistanceMatching
+    \item LinSimilarityMatching
+    \item SynonymMatching
+\end{itemize} 
+
+The \textit{WordNetDistanceMatching} recognizer uses the Jiang and Conrath distance and calculates the average distance
+between all the words in a sentence, normalized with the hypothesis size.
+
+The \textit{LinSimilarityMatching} uses the Lin similarity measurement. In contrast to the
+\textit{WordNetDistanceMatching} the \textit{LinSimilarityMatching} does not calculate averages, instead it is an
+implementation of the \textit{BasicMatcher} class, and returns whether two nodes in the graph match by checking if there
+similarity is bigger than 0.8. This value was found by trying different values.
+
+The \textit{SynonymMatching} is also a \textit{BasicMatcher} that checks whether two graph nodes have a overlap in synonyms
+with 1 graph level depth.
