@@ -7,5 +7,9 @@
 \contentsline {section}{\numberline {2}Building our own RTE system}{2}{section.2}
 \contentsline {subsection}{\numberline {2.1}Considerations from the prior systems}{2}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Implementation}{2}{subsection.2.2}
+<<<<<<< HEAD
 \contentsline {section}{\numberline {3}Results}{3}{section.3}
+=======
+\contentsline {section}{\numberline {3}Results}{4}{section.3}
+>>>>>>> 7ddaf0d7b850582899142644d9223dea235f5ce7
 \contentsline {section}{\numberline {4}Future plans}{4}{section.4}
