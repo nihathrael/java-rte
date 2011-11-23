@@ -128,14 +128,24 @@ public class Main {
 		ArrayList<THPair> testPairs = readPairs("data/preprocessed-blind-test-data.xml");
 		lemmaIdfs.addPairs(testPairs);
 		System.out.println("Done!");
+		
+		double mahoutBestThreshold = 0.5225;
 
 		System.out.println("Learning Data...");
 		IMachineLearnerRecognizer mlearning = new MahoutMatcher(costFunction3, lemmaIdfs);
 		mlearning.init(pairs);
-		System.out.println("Analyze Pairs...");
+		System.out.println("Analyze Test Pairs...");
 		ArrayList<Score> scores = analyzePairs(testPairs, mlearning);
 		System.out.println("Write results....");
-		writeScores(scores, "results/" + "blindTestData.txt", 0.5225);
+		writeScores(scores, "results/" + "test_funke_kinnen.txt", mahoutBestThreshold);
+		
+		System.out.println("Analyze Dev Pairs...");
+		mlearning.init(pairs); // RESET
+		scores = analyzePairs(pairs, mlearning);
+		System.out.println("Write results....");
+		writeScores(scores, "results/" + "dev_funke_kinnen.txt", mahoutBestThreshold);
+		System.out.println("DevData gave result: " + evaluateScores(scores, mahoutBestThreshold));
+		
 		System.out.println("Done!");
 
 	}
@@ -209,19 +219,9 @@ public class Main {
 
 		ArrayList<Score> scores = analyzePairs(pairs, recognizer);
 
-		int correct = 0;
 		double tmpScore = 0.0;
 		for (double i = 0.05; i < 1.0; i += 0.025) {
-			correct = 0;
-			for (Score score : scores) {
-				if (score.entailment > i && scoreMapping.get(score.id)) {
-					correct++;
-				}
-				if (score.entailment <= i && !scoreMapping.get(score.id)) {
-					correct++;
-				}
-			}
-			tmpScore = ((double) correct) / scores.size();
+			tmpScore = evaluateScores(scores, i);
 			if (tmpScore > bestScore) {
 				bestScore = tmpScore;
 				bestThres = i;
@@ -232,6 +232,23 @@ public class Main {
 				(System.currentTimeMillis() - t));
 
 		return bestScore;
+	}
+
+	/**
+	 * Evaluates the given scores for the given threshold.
+	 */
+	private double evaluateScores(ArrayList<Score> scores, double threshold) {
+		int correct = 0;
+		for (Score score : scores) {
+			if (score.entailment > threshold && scoreMapping.get(score.id)) {
+				correct++;
+			}
+			if (score.entailment <= threshold && !scoreMapping.get(score.id)) {
+				correct++;
+			}
+		}
+		double tmpScore = ((double) correct) / scores.size();
+		return tmpScore;
 	}
 
 	/**
