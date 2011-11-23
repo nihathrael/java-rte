@@ -2,7 +2,7 @@ package rte.pairs;
 
 import org.w3c.dom.Element;
 
-public class AdvPair implements Comparable<AdvPair> {
+public class THPair implements Comparable<THPair> {
 
 	public int id;
 	public String task;
@@ -11,8 +11,8 @@ public class AdvPair implements Comparable<AdvPair> {
 	public Text text;
 	public Text hypothesis;
 
-	public static AdvPair fromXML(Element pairElement) {
-		AdvPair pair = new AdvPair();
+	public static THPair fromXML(Element pairElement) {
+		THPair pair = new THPair();
 		pair.id = Integer.parseInt(pairElement.getAttribute("id"));
 		pair.task = pairElement.getAttribute("task");
 		pair.entailment = pairElement.getAttribute("entailment").equals("YES");
@@ -27,7 +27,7 @@ public class AdvPair implements Comparable<AdvPair> {
 		return pair;
 	}
 	
-	public int compareTo(AdvPair o) {
+	public int compareTo(THPair o) {
 		return new Integer(id).compareTo(o.id);
 	}
 

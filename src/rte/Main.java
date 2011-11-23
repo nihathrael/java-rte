@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import rte.pairs.AdvPair;
+import rte.pairs.THPair;
 import rte.recognizers.BleuScoreMatching;
 import rte.recognizers.EntailmentRecognizer;
 import rte.recognizers.IDFLemmaMatching;
@@ -50,7 +50,7 @@ public class Main {
 		WordNetAccessor.getInstance();
 
 		System.out.println("Reading Pairs...");
-		ArrayList<AdvPair> pairs = readPairs("data/RTE2_dev.preprocessed.xml");
+		ArrayList<THPair> pairs = readPairs("data/RTE2_dev.preprocessed.xml");
 		System.out.println("Done!");
 
 		System.out.println("Calculating IDFs...");
@@ -118,7 +118,7 @@ public class Main {
 		System.out.println("**********************************");
 
 		System.out.println("Reading TestData Pairs...");
-		ArrayList<AdvPair> testPairs = readPairs("data/preprocessed-blind-test-data.xml");
+		ArrayList<THPair> testPairs = readPairs("data/preprocessed-blind-test-data.xml");
 		lemmaIdfs.addPairs(testPairs);
 		System.out.println("Done!");
 
@@ -136,7 +136,7 @@ public class Main {
 	/**
 	 * Runs a ten-fold cross-validation using the mahout matcher
 	 */
-	public void crossValidate(ArrayList<AdvPair> pairs) {
+	public void crossValidate(ArrayList<THPair> pairs) {
 		/*
 		 * 10-fold Cross-Validation (CV) procedure: 1. divide data in 10
 		 * stratifed folds of approximately equal size 2. for i = 1 to 10 do: I
@@ -147,19 +147,19 @@ public class Main {
 
 		System.out.println("Cross-Validation with 10 samples started");
 
-		ArrayList<ArrayList<AdvPair>> folds = new ArrayList<ArrayList<AdvPair>>();
+		ArrayList<ArrayList<THPair>> folds = new ArrayList<ArrayList<THPair>>();
 
 		for (int i = 0; i < 10; i++) {
-			folds.add(new ArrayList<AdvPair>());
+			folds.add(new ArrayList<THPair>());
 		}
 
 		for (int i = 0; i < pairs.size(); i++) {
 			folds.get(i % 10).add(pairs.get(i));
 		}
 
-		ArrayList<AdvPair> learningData, testData;
-		learningData = new ArrayList<AdvPair>();
-		testData = new ArrayList<AdvPair>();
+		ArrayList<THPair> learningData, testData;
+		learningData = new ArrayList<THPair>();
+		testData = new ArrayList<THPair>();
 
 		double avgScore = 0.0;
 
@@ -194,7 +194,7 @@ public class Main {
 	 * 
 	 * @return The best achieved score
 	 */
-	private double findBestThreshold(ArrayList<AdvPair> pairs, EntailmentRecognizer recognizer) {
+	private double findBestThreshold(ArrayList<THPair> pairs, EntailmentRecognizer recognizer) {
 		System.out.println("Find best threshold for: \"" + recognizer.getName() + "\" ... ");
 		long t = System.currentTimeMillis();
 		double bestScore = 0.0;
@@ -253,10 +253,10 @@ public class Main {
 	 * 
 	 * @return Returns a List of scores resulting from the analysis
 	 */
-	private ArrayList<Score> analyzePairs(ArrayList<AdvPair> pairs, EntailmentRecognizer recognizer) {
+	private ArrayList<Score> analyzePairs(ArrayList<THPair> pairs, EntailmentRecognizer recognizer) {
 
 		ArrayList<Score> scores = new ArrayList<Score>();
-		for (AdvPair pair : pairs) {
+		for (THPair pair : pairs) {
 
 			double entailment = recognizer.entails(pair.text, pair.hypothesis);
 
@@ -267,13 +267,13 @@ public class Main {
 	}
 
 	/**
-	 * Reads in T-H {@link AdvPair} from the given file name. They are sorted by
+	 * Reads in T-H {@link THPair} from the given file name. They are sorted by
 	 * id in ascending order.
 	 * 
-	 * @return List of resulting {@link AdvPair}s
+	 * @return List of resulting {@link THPair}s
 	 */
-	private ArrayList<AdvPair> readPairs(String file) {
-		ArrayList<AdvPair> pairs = new ArrayList<AdvPair>();
+	private ArrayList<THPair> readPairs(String file) {
+		ArrayList<THPair> pairs = new ArrayList<THPair>();
 
 		try {
 
@@ -291,7 +291,7 @@ public class Main {
 
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
-					AdvPair pair = AdvPair.fromXML(eElement);
+					THPair pair = THPair.fromXML(eElement);
 					scoreMapping.put(pair.id, pair.entailment);
 					pairs.add(pair);
 				}

@@ -10,7 +10,7 @@ import org.apache.mahout.vectorizer.encoders.ContinuousValueEncoder;
 import org.apache.mahout.vectorizer.encoders.StaticWordValueEncoder;
 import org.apache.mahout.vectorizer.encoders.WordValueEncoder;
 
-import rte.pairs.AdvPair;
+import rte.pairs.THPair;
 import rte.pairs.Text;
 import rte.treedistance.cost.TreeEditCost;
 import rte.util.LemmaIDFCalculator;
@@ -39,7 +39,7 @@ public class MahoutMatcher implements EntailmentRecognizer {
 	private ContinuousValueEncoder encoder8;
 
 	public MahoutMatcher(TreeEditCost costFunction,
-			ArrayList<AdvPair> trainingData, LemmaIDFCalculator idfCalc) {
+			ArrayList<THPair> trainingData, LemmaIDFCalculator idfCalc) {
 		treeDistMatcher = new TreeDistMatcher(costFunction);
 		bleuScoreMatching = new BleuScoreMatching(2, false);
 		idfLemmaMatcher = new IDFLemmaMatching(idfCalc);
@@ -59,7 +59,7 @@ public class MahoutMatcher implements EntailmentRecognizer {
 
 		learningAlgorithm = new OnlineLogisticRegression(2, FEATURES, new L1());
 
-		for (AdvPair pair : trainingData) {
+		for (THPair pair : trainingData) {
 			Vector v = encodeVector(pair.text, pair.hypothesis);
 			int entails = 0;
 			if (pair.entailment) {
