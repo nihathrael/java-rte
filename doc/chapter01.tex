@@ -7,24 +7,25 @@ a hypothesis is entailed by a text.
 
 \subsection{Basic framework}
 
-We created a framework that enables us to create, use and evaluate
+We created a framework that enables us to make, use and evaluate
 a variety of RTE-systems in an easy way. So we have all systems of all parts
 of the project embedded in one big test environment.
 It loads the syntactically parsed data and wraps it in an object oriented structure 
 \textit{Text}. It is able to provide the data either as a linked graph or as a 
 list of words.
 
-To evaluate the performance of our systems we decided to implement our own evaluation
+To judge the performance of our systems we decided to implement our own evaluation
 code. The huge amount of file operations, that goes along with using the provided 
 python script has a big impact on the execution time.
+
 To achieve a common basis for evaluation and easy implementation of new systems we make use of 
 object oriented techniques. All of our RTE-systems are derived from the interface
 \textit{IEntailmentRecognizer}, that requires functionality to estimate the entailment
 propability of two given \textit{Text} instances.
 
-Further we implemented an abstract class \textit{BasicMatcher}, which is the basis for a
+Further we implemented an abstract class \textit{BasicMatcher}, that is the basis for a
 category of RTE-systems, that determine the entailment by comparing the sentences word by word.
-Thus we are able to create new systems of that category by implementing only one procedure, 
+Thus we are able to create new systems of this category by implementing only one procedure, 
 that chooses or calculates the desired property.
 
 \subsection{Systems in part 1}

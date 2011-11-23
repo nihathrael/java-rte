@@ -1,7 +1,18 @@
 
 \section{Results}
 
-- TreeDistMatcher combined with cost function
+In this table, the results from all of our RTE-systems are presented.
+The parameters describe the setup used for the test. For the tests with
+the \textit{TreeDistMatcher} "costs" denotes the used cost function, for 
+operations on the tree. "depth" for \textit{BleuScoreMatching} indicates 
+the maximal used n-gram length.
+
+It is important to notice that the results from the \textit{MahoutMatcher},
+can not be compared directly with the other percentages of correct guesses.
+That is because 10 fold-cross validation was used. It allows to determine
+a fitting threshold for each fold.
+The final performance result will be shown when applied to the test data,
+where we can apply it on the full range. 
 
 \begin{center}
 \begin{tabular}{ | c | c | c | c | }
@@ -32,6 +43,5 @@
 \end{tabular}
 \end{center}	
 
-
-- very low threshold on some
-- consider seperately because of cross validation
+- mahout matcher seems good, we will see
+- simple techniques, good performance
