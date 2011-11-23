@@ -8,5 +8,4 @@ public interface IEntailmentRecognizer {
 	
 	public String getName();
 	
-	
 }

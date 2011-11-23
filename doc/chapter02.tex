@@ -1,6 +1,31 @@
-
 \section{Building our own RTE system}
+In this section we describe our best RTE system.
 
 \subsection{Considerations from the prior systems}
+All prior systems turned out to be worse than the normal lemma matching, Which to this point was still our  best system
+with a score of 63.25\%. We did not see any big potential in improving the basic lemma matching further, so we decided
+to try to tune our machine learning matcher \textit{BasicMahoutMatcher} in the form of \textit{MahoutMatcher}. Our basic
+idea was to use the best non-machine-learner systems as features for the machine learner, hoping this would give the
+machine learner a good basis to work with.
 
-\subsection{Plan and implementations}
+\subsection{Implementation}
+We already had the basic \textit{BasicMahoutMatcher} from part three, which we decided to tune. The base of this matcher
+was the \textit{OnlineLogisticRegression} learning algorithm distributed with the Mahout machine-learning library. We
+played around with all our basic matchers as features, but ended up only using a quite small subset in the final
+version. Only 6 features were used:
+\begin{itemize}
+    \item Lemma Matching
+    \item IDF Lemma Matching
+    \item Lemma+POS Matching
+    \item BleuScore
+    \item Polarity
+    \item WordNet Synonym Matching
+\end{itemize}
+
+For all features for which we had matchers (all except Polarity) we used the matchers estimate whether a text/hypothesis
+pair was entailing or not as value, as this is already a convinient value between 0 and 1. All matchers except for
+BleuScore already contain the Polarity measurement already as a sort of "deatch" criteria, where we set the estimate to
+0 if the polarity doesn't match. We still use it as seperate feature, by setting the value to 1 if it matches and 0 if
+it doesn't, this proved helpful (without polarity feature, the result was ~62.6\%).
+
+

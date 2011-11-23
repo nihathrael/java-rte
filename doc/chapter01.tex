@@ -30,5 +30,29 @@ that chooses or calculates the desired property.
 \subsection{Systems in part 1}
 \subsection{Systems in part 2}
 \subsection{Systems in part 3}
+For part 3 we implemented a learning algorithm provided by the Mahout\footnote{Mahout website:
+\url{http://mahout.apache.org/}} library. Mahout is a powerful and scalable machine learning library, providing
+algorithms for recommendations, clustering, and classification.
+
+We implemented the \textit{BasicMahoutMatcher} by using
+the \textit{OnlineLogisticRegression} algorithm. The results were not very promising at first and it is fairly easy to
+get really bad results from the machine learner if the parameters are not correctly set or the wrong features are
+selected. The following features are used for the \textit{BasicMahoutMatcher}:
+
+\begin{itemize}
+    \item Lemma Matching
+    \item IDF Lemma Matching
+    \item Lemma+POS Matching
+    \item BleuScore
+    \item 2-Gram Overlap
+\end{itemize}
+
+The resulting score is not very good, as no semantic information and almost no structural information is used. The
+\textit{BasicMahoutMatcher} scores ~56.4\%.
+
+\subsubsection{Evaluating the Machine Learner}
+We implemented a 10-fold cross-validation to verify if our changes to the features improved the matcher or made the
+results worse. The code for this can be found in the \textit{Main} class under the function name
+\textit{crossValidate(ArrayList<THPair> pairs, IMachineLearnerRecognizer mlearner)}.
 
 
